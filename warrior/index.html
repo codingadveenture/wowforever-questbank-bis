@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1525">
+  <meta name="description" content="Interactive level-20 quest bank, Protection tank gear targets, and Mining/Blacksmithing crafts for a Night Elf Warrior on WoW Forever.">
+  <title>Level 20 Field Ledger · Night Elf Protection Warrior</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="identity">
+        <div class="crest" aria-hidden="true">W</div>
+        <div>
+          <p class="eyebrow">WoW Forever · Alliance PvE</p>
+          <h1>Level 20 Field Ledger</h1>
+          <p class="subtitle">Night Elf Protection Warrior · quest bank, sword-and-board gear, Mining and Blacksmithing, and cap-release route</p>
+        </div>
+      </div>
+      <div class="level-control">
+        <label for="current-level">Current level</label>
+        <select id="current-level" aria-label="Current character level">
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21+</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="summary-grid" aria-label="Tracker summary">
+      <article class="summary-card blue">
+        <div class="label">Banked quests</div>
+        <div class="value"><span id="bank-count">0</span><small> / 40</small></div>
+        <div class="detail"><span id="turned-count">0</span> already turned in</div>
+        <div class="progress-track" aria-hidden="true"><span id="bank-progress"></span></div>
+      </article>
+      <article class="summary-card gold">
+        <div class="label">Ready XP</div>
+        <div class="value" id="bank-xp">0</div>
+        <div class="detail">Database ceiling: 101,450–101,550</div>
+      </article>
+      <article class="summary-card green">
+        <div class="label">Tank gear owned</div>
+        <div class="value"><span id="gear-count">0</span><small> / <span id="gear-total">0</span></small></div>
+        <div class="detail">Practical level-20 targets</div>
+        <div class="progress-track" aria-hidden="true"><span id="gear-progress"></span></div>
+      </article>
+      <article class="summary-card craft">
+        <div class="label">Crafts done</div>
+        <div class="value"><span id="craft-count">0</span><small> / <span id="craft-total">0</span></small></div>
+        <div class="detail">Mining and Blacksmithing</div>
+        <div class="progress-track" aria-hidden="true"><span id="craft-progress"></span></div>
+      </article>
+      <article class="summary-card favor-card">
+        <div class="label">Level gate</div>
+        <div class="value" id="level-gate">Reach 20</div>
+        <div class="detail" id="level-gate-detail">Below 20, turn-ins are not wasted</div>
+      </article>
+    </section>
+
+    <section class="workspace">
+      <nav class="tabs" role="tablist" aria-label="Tracker sections">
+        <button class="tab-button" id="tab-bank" role="tab" aria-selected="true" aria-controls="panel-bank">Quest bank</button>
+        <button class="tab-button" id="tab-prep" role="tab" aria-selected="false" aria-controls="panel-prep">Prep route</button>
+        <button class="tab-button" id="tab-gear" role="tab" aria-selected="false" aria-controls="panel-gear">Tank gear</button>
+        <button class="tab-button" id="tab-craft" role="tab" aria-selected="false" aria-controls="panel-craft">Mining &amp; Blacksmithing</button>
+        <button class="tab-button" id="tab-turnin" role="tab" aria-selected="false" aria-controls="panel-turnin">Cap-release turn-in</button>
+        <button class="tab-button" id="tab-notes" role="tab" aria-selected="false" aria-controls="panel-notes">Rules &amp; sources</button>
+      </nav>
+
+      <section class="panel active" id="panel-bank" role="tabpanel" aria-labelledby="tab-bank">
+        <div class="panel-head">
+          <div>
+            <h2>40-slot quest bank</h2>
+            <p>Set a quest to <strong>Ready</strong> only when its objectives are complete and it is waiting in your journal. Ready quests drive the live slot and XP totals.</p>
+          </div>
+          <div class="panel-actions">
+            <label class="filter" for="quest-filter">Show
+              <select id="quest-filter">
+                <option value="all">All quests</option>
+                <option value="todo">Not ready</option>
+                <option value="ready">Ready only</option>
+                <option value="turned">Turned in</option>
+                <option value="skip">Skipped</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="callout"><strong>At level 18, banking is not urgent yet.</strong> Quest XP only goes to waste once you are capped at 20. Turn in whatever gets you to 20 fastest, then start holding completions. Quests that unlock nothing and are already done can stay in the log; just do not let the bank stop you reaching 20 before the release.<br><strong>Protect these before the cap increase:</strong> The Defias Brotherhood (Chausses of Westfall), Underground Assault, The Unsent Letter, and Bloodied Insignia (Remembrance Armor). Their rewards and follow-ups wait until after the mass turn-in.</div>
+        <div class="callout"><strong>Flags:</strong> <span class="tag needs20">needs 20</span> the quest is reported to start at level 20. <span class="tag hard">hard at 18</span> the targets are level 24–28 elites or packs; bring a full group or come back at 20. <span class="tag decay">decay risk</span> a level-17 or level-18 quest that pays less once you are six or more levels above it; turn it in early on release night. Minimum levels for most Redridge, Duskwood, and Wetlands quests were not confirmed: if the quest giver does not offer one, it needs a higher level.</div>
+        <div class="zone-list" id="quest-zones"></div>
+      </section>
+
+      <section class="panel" id="panel-prep" role="tabpanel" aria-labelledby="tab-prep" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Prep route</h2>
+            <p>The prerequisite turn-ins and route decisions that make the final bank possible. They do not count toward the 40 ready slots.</p>
+          </div>
+        </div>
+        <div class="zone-list" id="prep-groups"></div>
+      </section>
+
+      <section class="panel" id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Practical Protection set</h2>
+            <p>One-hander and shield, Alliance-accessible sources only. Stamina and armor first, then Defense, then Strength. No Merchant’s Favor is needed for the core list.</p>
+          </div>
+          <div class="panel-actions">
+            <label class="filter" for="gear-filter">Show
+              <select id="gear-filter">
+                <option value="all">All targets</option>
+                <option value="need">Still needed</option>
+                <option value="owned">Owned</option>
+                <option value="skip">Skipped</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="callout"><strong>Stat rule for a level-20 tank:</strong> Stamina and armor keep the healer comfortable; Defense lowers the chance to be crit and raises avoidance; Strength adds threat and block. Agility gives armor and dodge, so it is a fine secondary stat. Weapon damage still matters for threat, but a shield always beats a two-hander while tanking.<br><strong>The shield:</strong> Kresh’s Back (528 armor, +5 Defense, Wailing Caverns) is the clear level-18 target. Kresh is the turtle in the lake area; ask the group to kill him.</div>
+        <div class="zone-card">
+          <div class="zone-head"><div class="zone-title"><span class="zone-dot"></span><h3>Target list</h3></div><div class="zone-meta">Alliance-accessible</div></div>
+          <div class="rows" id="gear-rows"></div>
+        </div>
+        <div class="route-section">
+          <h3>Tank dungeon checklist</h3>
+          <p>The dungeons you are already running for the quest bank also supply the set. In order of value.</p>
+          <div class="zone-list" id="gear-farm-groups"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-craft" role="tabpanel" aria-labelledby="tab-craft" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Mining and Blacksmithing</h2>
+            <p>Self-crafted tank pieces and weapon stones within reach before and just after level 20. This is not a power-leveling plan: mine nodes on your route and craft at natural breaks.</p>
+          </div>
+          <div class="panel-actions">
+            <label class="filter" for="craft-filter">Show
+              <select id="craft-filter">
+                <option value="all">All crafts</option>
+                <option value="need">Still to do</option>
+                <option value="owned">Done</option>
+                <option value="skip">Skipped</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="callout craft-callout"><strong>Best value:</strong> Gemmed Copper Boots (Blacksmithing 35, 109 armor, +4 Strength, +4 Stamina) are mail, cheap, and good until 20. Rough Bronze Shoulders fill an otherwise empty slot from level 17. Weapon stones are a cheap threat boost for every dungeon pull.<br><strong>Learn ranks:</strong> the client data shows each recipe’s colour range but not every trainer learn rank. Check the trainer before buying materials.</div>
+        <div class="zone-card craft-card">
+          <div class="zone-head"><div class="zone-title"><span class="zone-dot"></span><h3>Crafts worth making</h3></div><div class="zone-meta">Self-made</div></div>
+          <div class="rows" id="craft-rows"></div>
+        </div>
+        <div class="route-section">
+          <h3>Out of reach or not worth it at 20</h3>
+          <p>Listed so you do not spend gold or Favor on them now.</p>
+          <div class="comparison-table" id="craft-skip-rows" aria-label="Crafts to skip at level 20"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-turnin" role="tabpanel" aria-labelledby="tab-turnin" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Cap-release turn-in</h2>
+            <p>Bind the hearthstone in Stormwind. If you hold the Wailing Caverns quests, log out in Ratchet and start there; otherwise start in Stormwind. Order: Barrens → (Menethil if Wetlands quests are held) → Stormwind, first half → Sentinel Hill and the Deadmines exit → Darkshire → Lakeshire → Tower of Azora → Stormwind, second half. Skip any stop where you hold nothing.</p>
+          </div>
+        </div>
+        <div class="callout"><strong>Before clicking anything:</strong> read the live reward pane. Forever is in beta, and the live journal overrides this ledger’s saved research. The level-17 and level-18 quests come early in this order so they pay full XP.</div>
+        <div class="zone-list" id="turnin-groups"></div>
+      </section>
+
+      <section class="panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes" hidden>
+        <div class="panel-head">
+          <div>
+            <h2>Decision rules, saving, and sources</h2>
+            <p>The tracker stores progress only in this browser. Export a JSON file to back it up or move it to another device, and import it there.</p>
+          </div>
+          <div class="panel-actions">
+            <button class="button" id="export-button" type="button">Export progress</button>
+            <label class="button" for="import-input">Import progress<input class="sr-only" id="import-input" type="file" accept="application/json"></label>
+            <button class="button ghost danger" id="reset-button" type="button">Reset tracker</button>
+          </div>
+        </div>
+        <div class="two-col">
+          <article class="info-card">
+            <h3>XP threshold once you are 20</h3>
+            <p>For a completed quest with no follow-up:</p>
+            <div class="thresholds">
+              <div class="threshold"><div class="range">≤ 1,500 XP</div><div>Turn it in while leveling. It is below the practical replacement line.</div></div>
+              <div class="threshold"><div class="range">1,550–1,950</div><div>Usually turn in. Hold only when already complete near 20, on the route, or needed to fill a slot.</div></div>
+              <div class="threshold"><div class="range">2,000–2,450</div><div>Check the bank before turning in. This is normal bank-candidate territory.</div></div>
+              <div class="threshold"><div class="range">≥ 2,500 XP</div><div>Preserve by default unless the turn-in unlocks a stronger chain or an urgent upgrade.</div></div>
+            </div>
+            <p><strong>Below 20 the rule is simpler:</strong> XP is never wasted, so turn in anything that helps you reach 20 before the release. <strong>Quest chains override the threshold.</strong> Turn in The Valor Family, the first two Night Watch stages, and the Redridge prerequisites because they unlock stronger bank targets.</p>
+            <p><strong>Low-level XP reduction:</strong> a quest pays 80% once you are six levels above it, 60% at seven, and 50% from eight (player-reported). Only the six <em>decay risk</em> quests here can be affected, and only if you turn them in after passing level 23–24.</p>
+          </article>
+          <article class="info-card">
+            <h3>Travel value</h3>
+            <ul>
+              <li><strong>Wailing Caverns:</strong> worth one full run for Kresh’s Back alone, plus five bank quests if you finish through Mutanus before the release. Holding them means logging out in Ratchet.</li>
+              <li><strong>The Deadmines:</strong> the core run. Cruel Barb, First Mate Band, and Blackened Defias Armor all drop here, and it carries seven bank quests.</li>
+              <li><strong>Ruins of Lordaeron:</strong> go when a group already wants it. The three Stormwind hand-ins are excellent; Abominable Creatures turns in inside the dungeon and gives the Slain Baron’s Signet tank ring on the spot.</li>
+              <li><strong>Duskwood:</strong> best open-world follow-up. The western spiders and wolves are fine solo with a shield; Totem, Silvia, Merrick, and final Night Watch need a partner.</li>
+              <li><strong>Hall of Thanes:</strong> a level 13–18 dungeon. Worth one run only if a group is going: several reward pieces in the gear list come from it.</li>
+              <li><strong>Shadowfang Keep and Blackfathom Deeps:</strong> after the cap rises. Blackfathom Villainy offers the Arctic Buckler shield.</li>
+            </ul>
+          </article>
+          <article class="info-card">
+            <h3>Protection talents at 18–20</h3>
+            <p>A dedicated level-20 tank build is <strong>0/0/11 Protection</strong>: 5/5 Shield Specialization, 2/2 Improved Bloodrage, 3/3 Improved Thunder Clap, and 1/3 Improved Revenge. At 18 you have 9 points.</p>
+            <p><strong>Pull:</strong> Charge in Battle Stance, swap to Defensive Stance, then Bloodrage, Shield Block, Revenge whenever lit, Thunder Clap on packs, Demoralizing Shout once, Sunder Armor on bosses, Heroic Strike only with spare Rage, and Taunt only after losing threat.</p>
+            <p>Visit the Warrior trainer at 18 and 20 before the next dungeon.</p>
+          </article>
+          <article class="info-card">
+            <h3>What this ledger does not know</h3>
+            <ul>
+              <li>Your current gear, Blacksmithing and Mining skill, gold, flight paths, and which Defias and Redridge steps are done.</li>
+              <li>The exact minimum level of most Redridge, Duskwood, and Wetlands quests.</li>
+              <li>The live stats of Bandsaw Wristbands and Remembrance Armor; check their tooltips before choosing.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="source-links">
+          <a href="https://www.wowhead.com/forever/quests" target="_blank" rel="noreferrer">Forever quest database ↗</a>
+          <a href="https://www.wowhead.com/forever/guide/classes/warrior/protection/level-20-tank-overview" target="_blank" rel="noreferrer">Level-20 Protection guide ↗</a>
+          <a href="https://foreverchanges.pro/dungeons/wailing-caverns" target="_blank" rel="noreferrer">Wailing Caverns loot ↗</a>
+          <a href="https://foreverchanges.pro/item/13245" target="_blank" rel="noreferrer">Kresh’s Back ↗</a>
+          <a href="https://www.wowhead.com/forever/guide/ruins-of-lordaeron-dungeon-overview-location-rewards" target="_blank" rel="noreferrer">Ruins guide ↗</a>
+          <a href="https://www.wowhead.com/forever/quests/eastern-kingdoms/wetlands" target="_blank" rel="noreferrer">Wetlands quests ↗</a>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <span>Research snapshot: 1 October 2026 · WoW Forever beta build 1.60.1.70124</span>
+      <span>Progress is saved automatically in this browser.</span>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
