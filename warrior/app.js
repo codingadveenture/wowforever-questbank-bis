@@ -104,11 +104,11 @@
   const prepGroups = [
     {
       id: "prep-level",
-      title: "Reach 20 first",
-      summary: "You are 18; the bank starts at 20",
+      title: "Capped at 20",
+      summary: "Hold completions; turn in only unlocks",
       tasks: [
-        task("prep-ding", "Turn in ordinary quests and the prerequisites below until you reach 20.", "Below 20 no XP is wasted. Hold only quests that are already complete and in the 40-quest list; everything else goes in now."),
-        task("prep-trainer", "Train at 18 and again at 20 before the next dungeon.", "Set talents toward 0/0/11 Protection (Rules & sources tab)."),
+        task("prep-ding", "Stop turning in quests that are on the 40-quest list.", "At the cap all turn-in XP is wasted. Turn in only prerequisites that unlock a bank quest, and accept losing their XP."),
+        task("prep-trainer", "Train at 20 before the next dungeon.", "Set talents toward 0/0/11 Protection (Rules & sources tab)."),
         task("prep-shield", "Carry a one-hander and shield, and level the one-hand weapon skill on ordinary mobs.", "A new weapon type with low skill misses too often to hold threat."),
       ],
     },
@@ -315,12 +315,12 @@
   function task(id, title, note) { return { id, title, note }; }
   function gearItem(id, slot, name, url, note, required, tags = []) { return { id, slot, name, url, note, required, tags }; }
 
-  const TAG_LABELS = { protect: "bank protected", post: "after bank", needs20: "needs 20", hard: "hard at 18", decay: "decay risk", hot: "hall of thanes", rol: "ruins", dm: "deadmines", wc: "wailing caverns" };
+  const TAG_LABELS = { protect: "bank protected", post: "after bank", needs20: "needs 20", hard: "hard at 20", decay: "decay risk", hot: "hall of thanes", rol: "ruins", dm: "deadmines", wc: "wailing caverns" };
   const tagLabel = tag => TAG_LABELS[tag] || tag;
 
   const allQuests = questGroups.flatMap(group => group.quests);
   const allTasks = [...prepGroups, ...turninGroups, ...gearFarmGroups].flatMap(group => group.tasks);
-  const defaultState = () => ({ level: "18", quests: {}, gear: {}, craft: {}, tasks: {}, activeTab: "bank" });
+  const defaultState = () => ({ level: "20", quests: {}, gear: {}, craft: {}, tasks: {}, activeTab: "bank" });
   let state = loadState();
 
   function loadState() {
