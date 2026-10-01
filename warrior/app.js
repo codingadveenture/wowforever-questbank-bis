@@ -140,7 +140,7 @@
       tasks: [
         task("prep-dm", "Prepare all seven Deadmines quests before the run.", "Finish the Defias chain, Traitor escort, Alba Fairmoon explosives chain, and Stormwind pickups."),
         task("prep-wc", "Complete Raptor Horns, take both Ratchet quests, and collect the hidden-cave WC quests.", "One full Fanglord + Naralex + Mutanus clear, and make sure Kresh dies for the shield. Log out in the Barrens only if keeping the five-quest bank."),
-        task("prep-rol", "Schedule Ruins only when a group already wants the dungeon.", "Prioritize the three Stormwind hand-ins; turn in Abominable Creatures inside for the tank ring."),
+        task("prep-rol", "Run Ruins of Lordaeron as the main tank-gear dungeon.", "Mirror of Rath’mael (shield) and Atrophic Girdle (belt) drop here; turn in Abominable Creatures inside for the tank ring; hold the three Stormwind hand-ins."),
       ],
     },
     {
@@ -178,7 +178,8 @@
     gearItem("gear-trinket", "Trinket", "Lookie’s Spyglass", item(273298), "+1 Spirit and a utility use · Cookie, Deadmines. Filler only.", false, ["dm", "optional"]),
     gearItem("gear-mainhand", "Main hand", "Cruel Barb", item(5191), "15.5 DPS, 2.80 speed, +12 Attack Power, requires level 19 · Edwin VanCleef, Deadmines.", true, ["dm"]),
     gearItem("gear-mainhand-alt", "Main hand alt", "Smite’s Reaver", item(5196), "13.9 DPS, +3 Strength, +2 Stamina, requires level 17 · Mr. Smite, Deadmines. Usable at 18.", false, ["dm", "optional"]),
-    gearItem("gear-shield", "Shield", "Kresh’s Back", item(13245), "528 armor, +5 Defense, requires level 18 · Kresh, Wailing Caverns.", true, ["wc"]),
+    gearItem("gear-shield-rol", "Shield", "Mirror of Rath’mael", item(271213), "547 armor, 11 block, +4 Strength, +4 Stamina, +3 Intellect, requires level 19 · Rath’mael, Ruins of Lordaeron (same run as Atrophic Girdle). The level-20 tank shield.", true, ["rol"]),
+    gearItem("gear-shield", "Shield", "Kresh’s Back", item(13245), "528 armor, 10 block, +5 Defense, requires level 18 · Kresh, Wailing Caverns (13% drop). Equip whichever shield drops first; the Mirror wins on armor, Stamina, and Strength.", false, ["wc", "optional"]),
     gearItem("gear-ranged", "Ranged", "Calibrated Blunderbuss", item(279894), "+9 Stamina · Old Ironforge Incursion, Hall of Thanes. A Night Elf must learn Guns in Ironforge first.", false, ["hot", "optional"]),
   ];
 
@@ -188,7 +189,7 @@
       title: "Wailing Caverns",
       summary: "Shield, gloves, and five bank quests",
       tasks: [
-        task("farm-wc-run", "Full clear through Mutanus; make sure Kresh is killed.", "Kresh’s Back is the shield. Gloves of the Fang drop from trash. Finish The Glowing Shard before leaving."),
+        task("farm-wc-run", "Full clear through Mutanus; make sure Kresh is killed.", "Kresh’s Back is the backup shield. Gloves of the Fang drop from trash. Finish The Glowing Shard before leaving."),
       ],
     },
     {
@@ -204,7 +205,7 @@
       title: "Ruins of Lordaeron",
       summary: "Only with a group already going",
       tasks: [
-        task("farm-rol-run", "Turn in Abominable Creatures inside for Slain Baron’s Signet.", "Hold Bloodied Insignia, Remember That I Love You, and Crest of Lordaeron for the release."),
+        task("farm-rol-run", "Kill Rath’mael and Witherfang for the shield and belt; turn in Abominable Creatures inside for Slain Baron’s Signet.", "Hold Bloodied Insignia, Remember That I Love You, and Crest of Lordaeron for the release."),
       ],
     },
     {
