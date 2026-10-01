@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1525">
+  <meta name="description" content="Live level 20–30 leveling plan for a Night Elf Protection Warrior on WoW Forever, adapted to the quests held in the level-20 quest bank.">
+  <title>Baysick Browntwo · Leveling Route 20–30</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="route.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="identity">
+        <div class="crest" aria-hidden="true">W</div>
+        <div>
+          <p class="eyebrow">WoW Forever · Alliance PvE</p>
+          <h1>Baysick Browntwo’s Route 20–30</h1>
+          <p class="subtitle">Night Elf Protection Warrior · the written leveling route as a live plan, starting from your quest bank</p>
+        </div>
+      </div>
+      <a class="button ghost back-link" href="../">← Ledger</a>
+    </header>
+
+    <section class="route-sticky" aria-label="Plan summary">
+      <div class="rs-nums">
+        <div><span class="rs-label">Bank XP</span><span class="rs-val gold" id="s-bank">0</span><span class="rs-detail" id="s-bank-detail"></span></div>
+        <div><span class="rs-label">Now</span><span class="rs-val blue" id="s-now">20.0</span><span class="rs-detail" id="s-now-detail"></span></div>
+        <div><span class="rs-label">XP to 30</span><span class="rs-val" id="s-need">331,800</span><span class="rs-detail" id="s-need-detail"></span></div>
+      </div>
+      <div class="rs-chips" id="s-chips" aria-label="Projected level at the end of each block"></div>
+      <p class="rs-verdict" id="s-verdict"></p>
+    </section>
+
+    <div class="callout">
+      <strong>Cash the bank first</strong> with the ledger’s cap-release turn-in route; it ends in Stormwind, where block A starts. The quests you hold in the ledger are your bank: their XP is the starting point here, and the matching Duskwood and Wetlands quests below are struck through. The plan then adds every planned quest in route order, applies Forever’s low-level rule at the level you will be at, and adds estimated kill XP. Tick quests as you play. Without a level override, ticked quests count as XP earned on the route; once you set your current level, that level is your XP and ticked quests leave the plan.
+    </div>
+
+    <section class="zone-card setup" aria-labelledby="setup-title">
+      <div class="zone-head">
+        <div class="zone-title"><span class="zone-dot"></span><h3 id="setup-title">Starting point</h3></div>
+        <div class="zone-meta" id="ledger-source">Ledger</div>
+      </div>
+      <div class="setup-body">
+        <p class="ledger-status" id="ledger-status"></p>
+        <div class="setup-grid">
+          <label class="field" for="bank-xp">Banked XP (type to override)
+            <input id="bank-xp" type="text" inputmode="numeric" autocomplete="off" placeholder="from the ledger">
+          </label>
+          <div class="field">
+            <span id="ov-label">Current level and % into it</span>
+            <div class="field-row">
+              <select id="ov-level" aria-labelledby="ov-label"></select>
+              <input id="ov-pct" type="number" inputmode="decimal" min="0" max="99.9" step="1" placeholder="%" aria-label="Percent into the level">
+              <button class="button small ghost" id="ov-clear" type="button">Clear</button>
+            </div>
+          </div>
+          <label class="field" for="scope">Route scope
+            <select id="scope">
+              <option value="auto">Auto (by bank size)</option>
+              <option value="full">Full passes</option>
+              <option value="trim">Drop optional B and C quests</option>
+              <option value="short">Dududu’s shortlists</option>
+            </select>
+            <span class="field-note" id="scope-note"></span>
+          </label>
+          <label class="field switch" for="gnomer">
+            <input id="gnomer" type="checkbox">
+            <span>Gnomeregan available<span class="field-note">A group is forming for the last dungeon.</span></span>
+          </label>
+        </div>
+        <details class="setup-details">
+          <summary>Banked Duskwood and Wetlands quests (<span id="tick-count">0</span> of 15)</summary>
+          <p class="field-note">Ticked quests count as banked: their XP joins the bank total (unless you typed one) and the route skips them and their prerequisites. Use these when the ledger lives on another device.</p>
+          <div class="tick-list" id="tick-list"></div>
+          <button class="button small ghost" id="tick-reset" type="button">Follow the ledger again</button>
+        </details>
+        <details class="setup-details">
+          <summary>Read the ledger from another device</summary>
+          <p class="field-note">On the ledger, open “Rules &amp; sources” and press “Export progress”. Open that file here, or paste its text.</p>
+          <div class="import-row">
+            <label class="button small" for="ledger-file">Open ledger file<input class="sr-only" id="ledger-file" type="file" accept="application/json,.json"></label>
+            <button class="button small ghost" id="forget-import" type="button" hidden>Forget the imported ledger</button>
+          </div>
+          <textarea id="ledger-paste" rows="4" placeholder="Paste the ledger’s exported JSON here" aria-label="Ledger JSON"></textarea>
+          <button class="button small" id="ledger-paste-read" type="button">Read pasted ledger</button>
+        </details>
+      </div>
+    </section>
+
+    <div class="block-list" id="blocks"></div>
+
+    <section class="zone-card save-card" aria-labelledby="save-title">
+      <div class="zone-head"><div class="zone-title"><span class="zone-dot"></span><h3 id="save-title">Saving and the rules behind the numbers</h3></div><div class="zone-meta">This browser only</div></div>
+      <div class="save-body">
+        <p>Route ticks and settings are saved in this browser under their own key; the ledger is only read, never changed. Export a JSON file to move them to another device.</p>
+        <div class="import-row">
+          <button class="button small" id="export-route" type="button">Export route progress</button>
+          <label class="button small" for="import-route">Import route progress<input class="sr-only" id="import-route" type="file" accept="application/json,.json"></label>
+          <button class="button small ghost danger" id="reset-route" type="button">Reset route</button>
+        </div>
+        <ul class="rules">
+          <li><strong>Levels</strong> follow the Classic curve from level 20: 21 at 23,200 · 22 at 48,400 · 23 at 75,700 · 24 at 105,100 · 25 at 136,800 · 26 at 170,800 · 27 at 207,200 · 28 at 246,100 · 29 at 287,500 · 30 at 331,800.</li>
+          <li><strong>Low-level rule</strong> (player-reported; check it on the first reduced turn-in): a quest pays 100% while you are at most five levels above its level, 80% at six, 60% at seven and 50% from eight. Reduced rows read “1,250 → 750 at 28”.</li>
+          <li><strong>Dungeon quests</strong> pay the beta multiple of Wowhead’s value: 3.75× in Blackfathom Deeps, 3.2× in the Stockade, about 2.6× in Gnomeregan.</li>
+          <li><strong>Kill XP</strong> is an estimate: about 40% of the quest XP while questing, scaled to the share of each block’s quests still planned, plus a fixed figure for each dungeon run.</li>
+          <li><strong>Route scope.</strong> The route says: with about 40,000 banked, drop the optional quests in blocks B and C; with about 80,000, use Cybes Dududu’s shortlists. Auto applies that; any quest can still be added or skipped by hand. <em>If behind</em> quests join only when the block would end below its leave level.</li>
+          <li><strong>Bank XP</strong> is the ledger’s listed XP for every quest held, without the low-level rule; a level-17 or level-18 quest turned in late pays less, so set your current level once the bank is cashed.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="footer route-footer">
+      <span>Adapted from RestedXP Guides, <a href="https://github.com/RestedXP/RXPGuides" target="_blank" rel="noreferrer">https://github.com/RestedXP/RXPGuides</a>, CC BY-NC-SA 4.0; this page is licensed CC BY-NC-SA 4.0.</span>
+      <span>Quest XP values are Wowhead Forever’s, with the beta dungeon multiples (Blackfathom Deeps 3.75×, the Stockade 3.2×, Gnomeregan about 2.6×); kill XP is estimated. Route written 1 October 2026.</span>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="route-data.js"></script>
+  <script src="route.js"></script>
+</body>
+</html>
