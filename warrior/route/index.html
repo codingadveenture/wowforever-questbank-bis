@@ -7,8 +7,8 @@
   <meta name="description" content="Live level 20–30 leveling plan for a Night Elf Protection Warrior on WoW Forever, adapted to the quests held in the level-20 quest bank.">
   <title>Baysick Browntwo · Leveling Route 20–30</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../styles.css">
-  <link rel="stylesheet" href="route.css">
+  <link rel="stylesheet" href="../styles.css?v=202610021032">
+  <link rel="stylesheet" href="route.css?v=202610021032">
 </head>
 <body>
   <main class="shell">
@@ -18,6 +18,7 @@
         <div>
           <p class="eyebrow">WoW Forever · Alliance PvE</p>
           <h1>Baysick Browntwo’s Route 20–30</h1>
+          <p class="eyebrow" id="page-version" style="margin:0 0 4px">Page updated 2 October 2026</p>
           <p class="subtitle">Night Elf Protection Warrior · the written leveling route as a live plan, starting from your quest bank</p>
         </div>
       </div>
@@ -104,9 +105,11 @@
         <ul class="rules">
           <li><strong>Levels</strong> follow the Classic curve from level 20: 21 at 23,200 · 22 at 48,400 · 23 at 75,700 · 24 at 105,100 · 25 at 136,800 · 26 at 170,800 · 27 at 207,200 · 28 at 246,100 · 29 at 287,500 · 30 at 331,800.</li>
           <li><strong>Low-level rule</strong> (player-reported; check it on the first reduced turn-in): a quest pays 100% while you are at most five levels above its level, 80% at six, 60% at seven and 50% from eight. Reduced rows read “1,250 → 750 at 28”.</li>
-          <li><strong>Dungeon quests</strong> pay the beta multiple of Wowhead’s value: 3.75× in Blackfathom Deeps, 3.2× in the Stockade, about 2.6× in Gnomeregan.</li>
+          <li><strong>Dungeon quests</strong> pay a beta multiple of Wowhead’s value: 2.375× in Blackfathom Deeps, 2.1× in the Stockade, about 1.8× in Gnomeregan. The 1 October 2026 build halved the bonus above the listed value (before it: 3.75×, 3.2× and 2.6×); read the first dungeon quest pane to confirm.</li>
+          <li><strong>Checkpoint.</strong> Gnomeregan’s quests and kills (about 57,000 XP) finish level 30 only from 28.7, so below 28.7 after block C the plan puts a reserve block first.</li>
+          <li><strong>/way chips</strong> need the TomTom addon. Every NPC and spot with coordinates has one: click a chip to copy the command, then paste it into the game chat for an arrow. Positions are Classic map coordinates (city ones from the RestedXP guides); if TomTom does not recognise a zone name, stand in that zone and delete the name from the command.</li>
           <li><strong>Kill XP</strong> is an estimate: about 40% of the quest XP while questing, scaled to the share of each block’s quests still planned, plus a fixed figure for each dungeon run.</li>
-          <li><strong>Route scope.</strong> The route says: with about 40,000 banked, drop the optional quests in blocks B and C; with about 80,000, use Cybes Dududu’s shortlists. Auto applies that; any quest can still be added or skipped by hand. <em>If behind</em> quests join only when the block would end below its leave level.</li>
+          <li><strong>Route scope.</strong> The route says: with about 80,000 banked, drop the optional quests in blocks B and C; with about 106,000, use Cybes Dududu’s shortlists. Auto applies that; any quest can still be added or skipped by hand. <em>If behind</em> quests join only when the block would end below its leave level.</li>
           <li><strong>Bank XP</strong> is the ledger’s listed XP for every quest held, without the low-level rule; a level-17 or level-18 quest turned in late pays less, so set your current level once the bank is cashed.</li>
         </ul>
       </div>
@@ -114,12 +117,12 @@
 
     <footer class="footer route-footer">
       <span>Adapted from RestedXP Guides, <a href="https://github.com/RestedXP/RXPGuides" target="_blank" rel="noreferrer">https://github.com/RestedXP/RXPGuides</a>, CC BY-NC-SA 4.0; this page is licensed CC BY-NC-SA 4.0.</span>
-      <span>Quest XP values are Wowhead Forever’s, with the beta dungeon multiples (Blackfathom Deeps 3.75×, the Stockade 3.2×, Gnomeregan about 2.6×); kill XP is estimated. Route written 1 October 2026.</span>
+      <span>Quest XP values are Wowhead Forever’s, with the beta dungeon multiples after the 1 October build (Blackfathom Deeps 2.375×, the Stockade 2.1×, Gnomeregan about 1.8×); kill XP is estimated. Route written 1 October 2026.</span>
     </footer>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="route-data.js"></script>
-  <script src="route.js"></script>
+  <script src="route-data.js?v=202610021032"></script>
+  <script src="route.js?v=202610021032"></script>
 </body>
 </html>

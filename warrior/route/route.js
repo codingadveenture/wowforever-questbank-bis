@@ -113,8 +113,56 @@
     }
   }
 
+  // ---------- step checklists ----------
+  // A step's text is one paragraph in the data; the page shows it as one line per sentence, each with a
+  // checkbox. Sentences are split at a full stop outside tags, chips, code and parentheses.
+  function splitStep(html) {
+    const lines = [];
+    let start = 0, depth = 0, inTag = false, shield = 0;
+    for (let i = 0; i < html.length; i++) {
+      const ch = html[i];
+      if (inTag) { if (ch === ">") inTag = false; continue; }
+      if (ch === "<") {
+        inTag = true;
+        if (/^<(button|code)/.test(html.slice(i, i + 8))) shield++;
+        else if (/^<\/(button|code)>/.test(html.slice(i, i + 10))) shield = Math.max(0, shield - 1);
+        continue;
+      }
+      if (shield) continue;
+      if (ch === "(") depth++;
+      else if (ch === ")") depth = Math.max(0, depth - 1);
+      else if (ch === "." && depth === 0) {
+        const rest = html.slice(i + 1);
+        const gap = rest.match(/^\s+/);
+        if (!gap) continue;
+        const next = rest[gap[0].length];
+        if (next === undefined || /[a-z]/.test(next)) continue;
+        lines.push(html.slice(start, i + 1).trim());
+        start = i + 1 + gap[0].length;
+      }
+    }
+    const tail = html.slice(start).trim();
+    if (tail) lines.push(tail);
+    return lines;
+  }
+  function hashText(text) {
+    let hash = 5381;
+    for (let i = 0; i < text.length; i++) hash = ((hash << 5) + hash + text.charCodeAt(i)) >>> 0;
+    return hash.toString(36);
+  }
+  const checkKeys = new Set();
+  for (const block of D.blocks) {
+    for (const step of block.steps) {
+      step.lines = splitStep(step.text).map(html => {
+        const key = `${block.id}|${step.n}|${hashText(html.replace(/<[^>]+>/g, ""))}`;
+        checkKeys.add(key);
+        return { key, html };
+      });
+    }
+  }
+
   // ---------- route state ----------
-  const defaultState = () => ({ quests: {}, gnomeregan: true, scope: "auto", bankXp: null, override: null, bankTicks: {}, ledgerImport: null });
+  const defaultState = () => ({ quests: {}, checks: {}, gnomeregan: true, scope: "auto", bankXp: null, override: null, bankTicks: {}, ledgerImport: null });
 
   function sanitizeState(candidate) {
     const clean = defaultState();
@@ -122,6 +170,11 @@
     if (candidate.quests && typeof candidate.quests === "object") {
       for (const [key, value] of Object.entries(candidate.quests)) {
         if (itemByKey.has(key) && ROUTE_STATES.includes(value)) clean.quests[key] = value;
+      }
+    }
+    if (candidate.checks && typeof candidate.checks === "object") {
+      for (const [key, value] of Object.entries(candidate.checks)) {
+        if (value === true && checkKeys.has(key)) clean.checks[key] = true;
       }
     }
     if (typeof candidate.gnomeregan === "boolean") clean.gnomeregan = candidate.gnomeregan;
@@ -201,7 +254,7 @@
 
   function effectiveScope(bankedXp) {
     if (state.scope !== "auto") return state.scope;
-    return bankedXp >= 80000 ? "short" : bankedXp >= 40000 ? "trim" : "full";
+    return bankedXp >= 106000 ? "short" : bankedXp >= 80000 ? "trim" : "full";
   }
 
   function scopeDrops(item, scope) {
@@ -400,7 +453,7 @@
         short = `No Gnomeregan → R1 + R2 + R3 · ends ${fmtLevel(w.end)}`;
       }
       lines.push(`Projected: ${reachText()}.`);
-      lines.push("Tick “Gnomeregan available” when a group is forming: its quests are worth more than level 29→30.");
+      lines.push("Tick “Gnomeregan available” when a group is forming: its quests and kills (about 57,000 XP) finish level 30 from 28.7.");
     }
     return { headline, short, lines };
   }
@@ -426,7 +479,9 @@
   function blockHtml(block) {
     const steps = block.steps.map(step => `
       <li class="step">
-        <div class="step-head"><span class="step-n">${esc(step.n)}</span><div class="step-text"><strong class="step-title">${esc(step.title)}</strong> ${step.text}</div></div>
+        <div class="step-head"><span class="step-n">${esc(step.n)}</span><div class="step-text"><strong class="step-title">${esc(step.title)}</strong>
+          <ul class="step-items">${step.lines.map(line => `<li class="step-item" data-check="${esc(line.key)}"><span class="step-check" role="checkbox" tabindex="0" aria-checked="false"></span><span class="step-item-text">${line.html}</span></li>`).join("")}</ul>
+        </div></div>
         ${step.quests.length ? `<div class="step-rows">${step.quests.map(rowHtml).join("")}</div>` : ""}
       </li>`).join("");
     const meta = block.leaveAt != null ? `${block.range} · ${block.leaveText.toLowerCase()}` : `${block.range} · ${block.leaveText.toLowerCase()}`;
@@ -447,7 +502,7 @@
 
   function checkpointHtml() {
     return `<article class="zone-card checkpoint-card" id="checkpoint">
-      <div class="zone-head"><div class="zone-title"><span class="zone-dot"></span><h3>Checkpoint after block C</h3></div><div class="zone-meta">28.5 → Gnomeregan</div></div>
+      <div class="zone-head"><div class="zone-title"><span class="zone-dot"></span><h3>Checkpoint after block C</h3></div><div class="zone-meta">${D.checkpoint} → Gnomeregan</div></div>
       <div class="checkpoint-body">
         <p class="checkpoint-verdict" id="checkpoint-verdict"></p>
         <ul class="checkpoint-lines" id="checkpoint-lines"></ul>
@@ -485,6 +540,19 @@
     updateBlocks(plan, here);
     document.querySelector("#checkpoint-verdict").textContent = result.headline;
     document.querySelector("#checkpoint-lines").innerHTML = result.lines.map(line => `<li>${esc(line)}</li>`).join("");
+    updateChecks();
+  }
+
+  function updateChecks() {
+    for (const item of document.querySelectorAll(".step-item")) {
+      const done = state.checks[item.dataset.check] === true;
+      item.classList.toggle("done", done);
+      item.querySelector(".step-check").setAttribute("aria-checked", String(done));
+    }
+    for (const step of document.querySelectorAll("#blocks .step")) {
+      const items = step.querySelectorAll(".step-item");
+      step.classList.toggle("all-done", items.length > 0 && [...items].every(item => item.classList.contains("done")));
+    }
   }
 
   function updateSetup(plan, here) {
@@ -645,7 +713,31 @@
   }
 
   function bindBlocks() {
+    document.querySelector("#blocks").addEventListener("keydown", event => {
+      if ((event.key === " " || event.key === "Enter") && event.target.classList.contains("step-check")) {
+        event.preventDefault();
+        event.target.click();
+      }
+    });
     document.querySelector("#blocks").addEventListener("click", event => {
+      const way = event.target.closest(".way");
+      if (way) {
+        copyText(way.dataset.way).then(ok => {
+          if (ok) { toast(`Copied: ${way.dataset.way}`); return; }
+          // The clipboard is blocked: show the whole command on the chip so it can be typed.
+          way.textContent = way.dataset.way;
+          toast("Could not copy. The full command is now shown on the chip.");
+        });
+        return;
+      }
+      const stepItem = event.target.closest(".step-item");
+      if (stepItem && !event.target.closest("a, button, input, code")) {
+        const key = stepItem.dataset.check;
+        if (state.checks[key]) delete state.checks[key]; else state.checks[key] = true;
+        saveState();
+        updateChecks();
+        return;
+      }
       const check = event.target.closest(".check");
       const toggle = event.target.closest(".rq-toggle");
       const doneAll = event.target.closest("[data-block-done]");
@@ -671,6 +763,7 @@
         const id = clearAll.dataset.blockClear;
         if (!window.confirm(`Clear every done, skip and add tick in block ${id}?`)) return;
         blockById[id].items.forEach(item => { delete state.quests[item.key]; });
+        Object.keys(state.checks).forEach(key => { if (key.startsWith(`${id}|`)) delete state.checks[key]; });
         saveState();
         update();
         toast(`Block ${id} ticks cleared.`);
@@ -785,6 +878,26 @@
       if (event.key === LEDGER_KEY || event.key === ROUTE_KEY) update();
     });
     document.addEventListener("visibilitychange", () => { if (!document.hidden) update(); });
+  }
+
+  // Copy a /way command; falls back to a hidden textarea where the clipboard API is unavailable.
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (_) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (_) { ok = false; }
+      area.remove();
+      return ok;
+    }
   }
 
   let toastTimer;

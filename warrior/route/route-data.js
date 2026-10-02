@@ -1,8 +1,9 @@
 /*
  * Baysick Browntwo, level 20–30 leveling route, encoded for route.js.
  * Source: docs/baysick-browntwo-level-20-30-leveling-route.md (1 October 2026), quest levels and XP from
- * Wowhead Forever's zone quest lists read the same day. Dungeon quests use the beta multiples the route
- * states (Blackfathom Deeps 3.75×, the Stockade 3.2×, Gnomeregan 2.6× the listed XP).
+ * Wowhead Forever's zone quest lists read the same day. Dungeon quests use the beta multiples after the
+ * 1 October 2026 build halved the dungeon-quest bonus (Blackfathom Deeps 2.375×, the Stockade 2.1×,
+ * Gnomeregan 1.8× the listed XP; before that build 3.75×, 3.2× and 2.6×).
  * Adapted from RestedXP Guides, https://github.com/RestedXP/RXPGuides, CC BY-NC-SA 4.0.
  * This file is licensed CC BY-NC-SA 4.0.
  *
@@ -15,6 +16,16 @@
  */
 (() => {
   "use strict";
+  // Action labels for step text: every quest mention says whether it is accepted or turned in at that stop.
+  const ACC = `<b class="act accept">Accept</b>`;
+  const TURN = `<b class="act turnin">Turn in</b>`;
+  // TomTom waypoint chip: shows the zone and coordinates and copies the full /way command (zone, coordinates,
+  // name) when clicked. Every chip names its zone, so the command works from anywhere.
+  // City positions are the Classic and TBC ones in the RestedXP guides (CC BY-NC-SA 4.0).
+  const WAY = (zone, x, y, label) => {
+    const command = `/way ${zone} ${x.toFixed(1)} ${y.toFixed(1)} ${label}`;
+    return `<button type="button" class="way" data-way="${command}" title="Copy: ${command}">/way ${zone} ${x.toFixed(1)} ${y.toFixed(1)}</button>`;
+  };
 
   function q(id, name, xp, questLevel, reqLevel, zone, tags, o = {}) {
     return {
@@ -48,7 +59,7 @@
       steps: [
         {
           n: "1", title: "Stormwind, before leaving.",
-          text: `Pick up <em>Bazil Thredd</em> from Baros Alexston (after <em>The Unsent Letter</em>) → Warden Thelwater at the Stockade → <em>The Stockade Riots</em>; <em>Quell the Uprising</em> (Thelwater) and <em>The Color of Blood</em> (Nikova Raskol, Old Town) once you are 22, otherwise on the Stockade visit; <em>The Corruption Abroad</em> (Argos Nightwhisper, the park, 21,55); <em>Gyrodrillmatic Excavationators</em> (Shoni, Dwarven District). Then the tram to Ironforge: Gerrig Bonegrip, Forlorn Cavern, <em>Knowledge in the Deeps</em> (10,313 XP, the Lorgalis Manuscript inside BFD).`,
+          text: `Baros Alexston ${WAY("Stormwind City", 49.2, 30.3, "Baros Alexston")}: ${ACC} <em>Bazil Thredd</em> (offered once <em>The Unsent Letter</em> is turned in). Warden Thelwater ${WAY("Stormwind City", 41.1, 58.1, "Warden Thelwater")} at the Stockade: ${TURN} <em>Bazil Thredd</em>, then ${ACC} <em>The Stockade Riots</em>. Once you are 22, also ${ACC} <em>Quell the Uprising</em> from Thelwater and ${ACC} <em>The Color of Blood</em> from Nikova Raskol ${WAY("Stormwind City", 72.4, 47.7, "Nikova Raskol")}, Old Town; otherwise take both on the Stockade visit. Argos Nightwhisper (the park, ${WAY("Stormwind City", 21, 55, "Argos Nightwhisper")}): ${ACC} <em>The Corruption Abroad</em>. Shoni ${WAY("Stormwind City", 55.5, 12.5, "Shoni the Shilent")}, Dwarven District: ${ACC} <em>Gyrodrillmatic Excavationators</em>. Then the tram to Ironforge. Gerrig Bonegrip ${WAY("Ironforge", 50.8, 5.6, "Gerrig Bonegrip")}, Forlorn Cavern: ${ACC} <em>Knowledge in the Deeps</em> (6,531 XP; the Lorgalis Manuscript drops inside BFD, and the quest is turned in at the end of block B).`,
           quests: [],
         },
         {
@@ -58,12 +69,12 @@
         },
         {
           n: "3", title: "Auberdine → Darnassus and back.",
-          text: `Gershala Nightwhisper: turn in <em>The Corruption Abroad</em>, take <em>Researching the Corruption</em> (8 Corrupted Brain Stems from the naga and satyrs around the Zoram Strand and the temple entrance). Sentinel Selarin (39.2,43.4): <em>Trek to Ashenvale</em> (365). Ship or flight to Rut'theran, then Darnassus: Dawnwatcher Shaedlass, <em>In Search of Thaelrid</em>; Argent Guard Manados, <em>Twilight Falls</em>. Fly back to Auberdine.`,
+          text: `Gershala Nightwhisper ${WAY("Darkshore", 38.3, 43.0, "Gershala Nightwhisper")}: ${TURN} <em>The Corruption Abroad</em>, then ${ACC} <em>Researching the Corruption</em> (8 Corrupted Brain Stems from the naga and satyrs around the Zoram Strand and the temple entrance). Sentinel Selarin ${WAY("Darkshore", 39.2, 43.4, "Sentinel Selarin")}: ${ACC} <em>Trek to Ashenvale</em> (365). Ship or flight to Rut'theran, then Darnassus. Dawnwatcher Shaedlass ${WAY("Darnassus", 55.2, 24.0, "Shaedlass and Manados, Argent Dawn")}: ${ACC} <em>In Search of Thaelrid</em>. Argent Guard Manados: ${ACC} <em>Twilight Falls</em>. Fly back to Auberdine.`,
           quests: [],
         },
         {
           n: "4", title: "South on the road into Ashenvale.",
-          text: `Maestra's Post, Orendil Broadleaf (26.4,38.6): <em>Bathran's Hair</em> (780): 5 half-buried brown sacks at Bathran's Haven (29.5–33.0, 21.4–24.3), then <em>Orendil's Cure</em> (1,950, a delivery). If the Darkshore <em>Tower of Althalaxx</em> chain is at the "go to Delgren" step, Delgren (26.2,38.7) continues it: a Glowing Soul Gem from the Dark Strand at Ordil'Aran (31.3,30.7; a very low drop, do not farm it), then Ilkrud's tome at Fire Scar Shrine (25.3,60.7).`,
+          text: `Maestra's Post, Orendil Broadleaf ${WAY("Ashenvale", 26.4, 38.6, "Orendil Broadleaf")}: ${ACC} <em>Bathran's Hair</em> (780): 5 half-buried brown sacks at Bathran's Haven (29.5–33.0, 21.4–24.3). Back at Orendil: ${TURN} <em>Bathran's Hair</em>, then ${ACC} <em>Orendil's Cure</em> (1,950, a delivery to Pelturas in Astranaar). If the Darkshore <em>Tower of Althalaxx</em> chain is at the "go to Delgren" step, Delgren ${WAY("Ashenvale", 26.2, 38.7, "Delgren")} continues it: ${TURN} that step, then ${ACC} the next, a Glowing Soul Gem from the Dark Strand at Ordil'Aran (${WAY("Ashenvale", 31.3, 30.7, "Dark Strand, Ordil'Aran")}; a very low drop, do not farm it). If the gem drops: ${TURN} it to Delgren, then ${ACC} the next, Ilkrud's tome at Fire Scar Shrine ${WAY("Ashenvale", 25.3, 60.7, "Ilkrud, Fire Scar Shrine")}, and ${TURN} it to Delgren as well.`,
           quests: [
             q(1010, "Bathran's Hair", 780, 20, 20, AV, ["core"], { note: "Five brown sacks at Bathran's Haven; check this first reward against the listed 780." }),
             q(970, "The Tower of Althalaxx (Soul Gem)", 1650, 21, 13, AV, ["extra"], { after: [967], note: "Only if the Darkshore chain is at the Delgren step; the gem is a very low drop." }),
@@ -72,7 +83,7 @@
         },
         {
           n: "5", title: "Astranaar.",
-          text: `Flight path from Daelyshia (34.4,48.0). Shindrell Swiftfire (34.7,48.8): <em>The Zoram Strand</em> (20 Wrathtail Heads, 1,450). Raene Wolfrunner (36.6,49.6): <em>Trek to Ashenvale</em>, <em>Raene's Cleansing</em> (1,450), <em>Culling the Threat</em> (2,000; Dal Bloodclaw patrols Thistlefur Village, 36–40, 32–37). Pelturas Whitemoon (37.4,51.8): <em>Orendil's Cure</em>, then <em>Elune's Tear</em> (1,750).`,
+          text: `Flight path from Daelyshia ${WAY("Ashenvale", 34.4, 48.0, "Daelyshia")}. Shindrell Swiftfire ${WAY("Ashenvale", 34.7, 48.8, "Shindrell Swiftfire")}: ${ACC} <em>The Zoram Strand</em> (20 Wrathtail Heads, 1,450). Raene Wolfrunner ${WAY("Ashenvale", 36.6, 49.6, "Raene Wolfrunner")}: ${TURN} <em>Trek to Ashenvale</em>, then ${ACC} <em>Raene's Cleansing</em> (1,450) and ${ACC} <em>Culling the Threat</em> (2,000; Dal Bloodclaw patrols Thistlefur Village, 36–40, 32–37). Pelturas Whitemoon ${WAY("Ashenvale", 37.4, 51.8, "Pelturas Whitemoon")}: ${TURN} <em>Orendil's Cure</em>, then ${ACC} <em>Elune's Tear</em> (1,750).`,
           quests: [
             q(990, "Trek to Ashenvale", 365, 19, 15, AV, ["core"], { note: "Hand in at Raene Wolfrunner." }),
             q(1020, "Orendil's Cure", 1950, 20, 20, AV, ["core"], { after: [1010], note: "Delivery to Pelturas Whitemoon." }),
@@ -80,21 +91,21 @@
         },
         {
           n: "6", title: "Lake Falathim.",
-          text: `Teronis' Corpse (20.3,42.3): turn in <em>Raene's Cleansing</em>, take the gem step (1,250): a Glowing Gem from the Saltspittle murlocs (19.4–21.0, 41.6–43.8).`,
+          text: `Teronis' Corpse ${WAY("Ashenvale", 20.3, 42.3, "Teronis' Corpse")}: ${TURN} <em>Raene's Cleansing</em>, then ${ACC} its gem step (1,250): a Glowing Gem from the Saltspittle murlocs (19.4–21.0, 41.6–43.8).`,
           quests: [
             q(991, "Raene's Cleansing", 1450, 19, 18, AV, ["core"], { note: "First step, handed in at Teronis' Corpse." }),
           ],
         },
         {
           n: "7", title: "The Zoram Strand.",
-          text: `Talen (14.8,31.3): <em>The Ancient Statuette</em> (1,150; it lies at 14.2,20.6), then <em>Ruuzel</em> (2,550; the island at 6.5,13.4, two escorts). Naga along the strand for the heads and brain stems. The dungeon entrance is the sunken temple at the north end (14.2,14.6).`,
+          text: `Talen ${WAY("Ashenvale", 14.8, 31.3, "Talen")}: ${ACC} <em>The Ancient Statuette</em> (1,150; it lies at ${WAY("Ashenvale", 14.2, 20.6, "Ancient Statuette")}). Back at Talen: ${TURN} <em>The Ancient Statuette</em>, then ${ACC} <em>Ruuzel</em> (2,550; the island at ${WAY("Ashenvale", 6.5, 13.4, "Ruuzel")}, two escorts). Naga along the strand for the heads and brain stems. The dungeon entrance is the sunken temple at the north end ${WAY("Ashenvale", 14.2, 14.6, "Blackfathom Deeps entrance")}.`,
           quests: [
             q(1007, "The Ancient Statuette", 1150, 20, 19, AV, ["core"], { note: "The statuette lies at 14.2,20.6." }),
           ],
         },
         {
           n: "Late group", title: "If the group is an hour late: the Stonetalon mini-loop.",
-          text: `Through the Talondeep Path (mouth at 42.5,71.7): up to about 4,100 XP and the Stonetalon Peak flight path. Faldreas in Astranaar, <em>Journey to Stonetalon Peak</em> (680); <em>Pridewings of Stonetalon</em> (1,650; Shindrell offers it only once <em>The Zoram Strand</em> is handed in); the new <em>Stonetalon Supply Run</em> (1,950; a dead courier's bundles from the Mirkfallon wyverns, start point unknown).`,
+          text: `Through the Talondeep Path (mouth at ${WAY("Ashenvale", 42.5, 71.7, "Talondeep Path mouth")}): up to about 4,100 XP and the Stonetalon Peak flight path. Faldreas in Astranaar: ${ACC} <em>Journey to Stonetalon Peak</em> (680). Shindrell: ${ACC} <em>Pridewings of Stonetalon</em> (1,650; she offers it only once <em>The Zoram Strand</em> is handed in). ${ACC} the new <em>Stonetalon Supply Run</em> where it starts (1,950; a dead courier's bundles from the Mirkfallon wyverns, start point unknown). Stonetalon Peak: ${TURN} <em>Journey to Stonetalon Peak</em> to Keeper Albagorm and ${TURN} <em>Stonetalon Supply Run</em> to Innkeeper Faralia. Back in Astranaar, Shindrell: ${TURN} <em>Pridewings of Stonetalon</em>.`,
           quests: [
             q(1056, "Journey to Stonetalon Peak", 680, 18, 18, "Stonetalon", ["extra"], { note: "Faldreas in Astranaar." }),
             q(1134, "Pridewings of Stonetalon", 1650, 21, 18, "Stonetalon", ["extra"], { after: [1008], note: "Offered once The Zoram Strand is handed in." }),
@@ -103,15 +114,15 @@
         },
         {
           n: "8", title: "Blackfathom Deeps.",
-          text: `Thaelrid inside gives <em>Blackfathom Villainy</em> (12,375; Head of Kelris). Loot the Lorgalis Manuscript. Kelris, Lady Sarevess, Old Serra'kis; Aku'mai optional. Twilight Pendants for <em>Twilight Falls</em> (9,563).`,
+          text: `Inside, at Argent Guard Thaelrid: ${TURN} <em>In Search of Thaelrid</em>, then ${ACC} <em>Blackfathom Villainy</em> (7,838; Head of Kelris). Loot the Lorgalis Manuscript. Kelris, Lady Sarevess, Old Serra'kis; Aku'mai optional. Twilight Pendants for <em>Twilight Falls</em> (6,056).`,
           quests: [
-            dq(1198, "In Search of Thaelrid", 2400, 3.75, 24, 18, BFD, ["core"], { note: "Handed in to Thaelrid inside the dungeon." }),
+            dq(1198, "In Search of Thaelrid", 2400, 2.375, 24, 18, BFD, ["core"], { note: "Handed in to Thaelrid inside the dungeon." }),
             run("run-bfd", "Blackfathom Deeps run: kill XP", 7500, BFD, "Estimate for one five-player run."),
           ],
         },
         {
           n: "9", title: "After the run.",
-          text: `Talen: <em>Ruuzel</em>. Astranaar: <em>The Zoram Strand</em>, <em>Culling the Threat</em>, the gem step, then the moonwell talk (830). East: Elune's Tear on the Iris Lake island (46.4,46.4); Shael'dryn at the moonwell east of the lake (about 53,46): turn in the talk, take the next <em>Raene's Cleansing</em> (2,200; carry it to R3). Pelturas: <em>Elune's Tear</em> → <em>The Ruins of Stardust</em> (1,850; bushes at 33.3,67.8) → <em>Fallen Sky Lake</em> (3,050; carry it to R3). If still below 23: Silverwind Refuge (49.8,67.2), <em>Elemental Bracers</em> (1,950; Befouled Water Elementals in Mystral Lake) and Raene's <em>An Aggressive Defense</em> (1,950; the Foulweald camps at 50–56, 60–64).`,
+          text: `Talen: ${TURN} <em>Ruuzel</em>. Astranaar, Shindrell: ${TURN} <em>The Zoram Strand</em>. Raene: ${TURN} <em>Culling the Threat</em> and ${TURN} the gem step of <em>Raene's Cleansing</em>, then ${ACC} the moonwell talk (830). East: loot Elune's Tear on the Iris Lake island ${WAY("Ashenvale", 46.4, 46.4, "Elune's Tear, Iris Lake island")}. Shael'dryn at the moonwell east of the lake (about ${WAY("Ashenvale", 53, 46, "Shael'dryn, moonwell")}): ${TURN} the talk step, then ${ACC} the next <em>Raene's Cleansing</em> (2,200; carry it to R3). Pelturas: ${TURN} <em>Elune's Tear</em>, then ${ACC} <em>The Ruins of Stardust</em> (1,850; bushes at ${WAY("Ashenvale", 33.3, 67.8, "Stardust bushes")}). Back at Pelturas: ${TURN} <em>The Ruins of Stardust</em>, then ${ACC} <em>Fallen Sky Lake</em> (3,050; carry it to R3). If still below 23: Sentinel Velene Starstrike at Silverwind Refuge ${WAY("Ashenvale", 49.8, 67.2, "Sentinel Velene Starstrike")}: ${ACC} <em>Elemental Bracers</em> (1,950; Befouled Water Elementals in Mystral Lake) and ${TURN} it to her. Raene: ${ACC} <em>An Aggressive Defense</em> (1,950; the Foulweald camps at 50–56, 60–64) and ${TURN} it to her.`,
           quests: [
             q(1009, "Ruuzel", 2550, 25, 20, AV, ["core"], { after: [1007], note: "The island at 6.5,13.4; pull one escort away first." }),
             q(1008, "The Zoram Strand", 1450, 19, 14, AV, ["core"], { note: "20 Wrathtail Heads. Pays 80% from level 25." }),
@@ -126,11 +137,11 @@
         },
         {
           n: "10", title: "Leave.",
-          text: `Fly Astranaar → Auberdine: <em>Researching the Corruption</em> (Staghide Armguards or Prelacy Cape). Fly Rut'theran, Darnassus: <em>Blackfathom Villainy</em>, <em>Twilight Falls</em> (read the pane). Back to Auberdine: Hollee, <em>Unrequited Love</em> (165, hands in at Menethil); board the ship to Menethil.`,
+          text: `Fly Astranaar → Auberdine. Gershala ${WAY("Darkshore", 38.3, 43.0, "Gershala Nightwhisper")}: ${TURN} <em>Researching the Corruption</em> (Staghide Armguards or Prelacy Cape). Fly Rut'theran, then Darnassus: ${TURN} <em>Blackfathom Villainy</em> to Dawnwatcher Selgorm ${WAY("Darnassus", 55.2, 24.0, "Selgorm and Manados, Argent Dawn")} and ${TURN} <em>Twilight Falls</em> to Argent Guard Manados (read the pane). Back to Auberdine. Hollee: ${ACC} <em>Unrequited Love</em> (165, hands in at Menethil); board the ship to Menethil.`,
           quests: [
-            dq(1275, "Researching the Corruption", 2400, 3.75, 24, 18, BFD, ["core"], { note: "Gershala Nightwhisper, Auberdine." }),
-            dq(1200, "Blackfathom Villainy", 3300, 3.75, 27, 18, BFD, ["core"], { after: [1198], note: "Darnassus; Head of Kelris." }),
-            dq(1199, "Twilight Falls", 2550, 3.75, 25, 20, BFD, ["core"], { note: "Argent Guard Manados, Darnassus; read the reward pane." }),
+            dq(1275, "Researching the Corruption", 2400, 2.375, 24, 18, BFD, ["core"], { note: "Gershala Nightwhisper, Auberdine." }),
+            dq(1200, "Blackfathom Villainy", 3300, 2.375, 27, 18, BFD, ["core"], { after: [1198], note: "Darnassus; Head of Kelris." }),
+            dq(1199, "Twilight Falls", 2550, 2.375, 25, 20, BFD, ["core"], { note: "Argent Guard Manados, Darnassus; read the reward pane." }),
           ],
         },
       ],
@@ -147,7 +158,7 @@
       steps: [
         {
           n: "1", title: "Menethil Harbor.",
-          text: `Flight path from Shellei Brondir (9.5,59.7). First Mate Fitzsimmons (10.8,59.6): <em>The Third Fleet</em> (buy a Flagon of Mead at 10.7,60.9, 220) → <em>The Cursed Crew</em> (1,750), and <em>The Greenwarden</em> (830). Sylessa Duskwhisper: <em>Bloom of the Heavens</em> (2,350). Karl Boran (8.3,58.5): <em>Claws from the Deep</em> (1,750). James Halloran (8.6,55.8): <em>Young Crocolisk Skins</em> (1,750; six skins) and <em>Crocs of the Sky</em> (2,200) if offered. Caitlin Grassman: <em>Alchemical Hazards</em> (1,750). Sida (11.7,58.0): <em>Digging Through the Ooze</em> (2,400). Captain Stoutfist, Menethil Keep upstairs (9.9,57.4): <em>War Banners</em> (2,300). Valstag Ironjaw: <em>Spoils of War</em> (1,750; 6 timber and 30 iron salvaged underwater in the harbour, so only if you can manage the breath). Tarrel Rockweaver (11.5,52.1): <em>Unrequited Love</em>, then <em>In Search of the Excavation Team</em> (970 + 485).`,
+          text: `Flight path from Shellei Brondir ${WAY("Wetlands", 9.5, 59.7, "Shellei Brondir")}. First Mate Fitzsimmons ${WAY("Wetlands", 10.8, 59.6, "First Mate Fitzsimmons")}: ${ACC} <em>The Third Fleet</em> and ${ACC} <em>The Greenwarden</em> (830). Buy a Flagon of Mead at ${WAY("Wetlands", 10.7, 60.9, "Innkeeper, Flagon of Mead")}; back at Fitzsimmons, ${TURN} <em>The Third Fleet</em> (220), then ${ACC} <em>The Cursed Crew</em> (1,750). Sylessa Duskwhisper: ${ACC} <em>Bloom of the Heavens</em> (2,350). Karl Boran ${WAY("Wetlands", 8.3, 58.5, "Karl Boran")}: ${ACC} <em>Claws from the Deep</em> (1,750). James Halloran ${WAY("Wetlands", 8.6, 55.8, "James Halloran")}: ${ACC} <em>Young Crocolisk Skins</em> (1,750; six skins), and ${ACC} <em>Crocs of the Sky</em> (2,200) if offered. Caitlin Grassman: ${ACC} <em>Alchemical Hazards</em> (1,750). Sida ${WAY("Wetlands", 11.7, 58.0, "Sida")}: ${ACC} <em>Digging Through the Ooze</em> (2,400). Captain Stoutfist, Menethil Keep upstairs ${WAY("Wetlands", 9.9, 57.4, "Captain Stoutfist")}: ${ACC} <em>War Banners</em> (2,300). Valstag Ironjaw: ${ACC} <em>Spoils of War</em> (1,750; 6 timber and 30 iron salvaged underwater in the harbour, so only if you can manage the breath). Tarrel Rockweaver ${WAY("Wetlands", 11.5, 52.1, "Tarrel Rockweaver")}: ${TURN} <em>Unrequited Love</em>, then ${ACC} <em>In Search of the Excavation Team</em> (970 + 485).`,
           quests: [
             q(288, "The Third Fleet", 220, 27, 22, WL, ["core"], { note: "Buy a Flagon of Mead and hand it straight back." }),
             q(98461, "Unrequited Love", 165, 21, 18, WL, ["core"], { note: "From Hollee in Auberdine; hand in at Tarrel Rockweaver." }),
@@ -155,19 +166,19 @@
         },
         {
           n: "2", title: "South shore.",
-          text: `The wreck of the <em>Flying Osprey</em> just south of town: Nord'el for <em>Bloom of the Heavens</em>.`,
+          text: `The wreck of the <em>Flying Osprey</em> just south of town: recover Nord'el for <em>Bloom of the Heavens</em>, then Sylessa: ${TURN} <em>Bloom of the Heavens</em>.`,
           quests: [
             q(98208, "Bloom of the Heavens", 2350, 29, 22, WL, ["core"], { note: "Forever-new; Nord'el at the Flying Osprey wreck." }),
           ],
         },
         {
           n: "3", title: "North-west shore.",
-          text: `(14.1,41.5 → 16.7,39.7 → 18.8,40.0): 12 Bluegill Murlocs and Gobbler; young crocolisk skins. The cursed wrecks (13.9,30.4): 13 Cursed Sailors, 5 Cursed Marines and First Mate Snellig inside the hull. The hovels and the giant crocolisks here come later (step 8), because their quests only open once <em>Claws</em> and <em>Young Crocolisk Skins</em> are handed in.`,
+          text: `(${WAY("Wetlands", 14.1, 41.5, "North-west shore 1")} → ${WAY("Wetlands", 16.7, 39.7, "North-west shore 2")} → ${WAY("Wetlands", 18.8, 40.0, "North-west shore 3")}): 12 Bluegill Murlocs and Gobbler; young crocolisk skins. The cursed wrecks ${WAY("Wetlands", 13.9, 30.4, "Cursed wrecks")}: 13 Cursed Sailors, 5 Cursed Marines and First Mate Snellig inside the hull. The hovels and the giant crocolisks here come later (step 8), because their quests only open once <em>Claws</em> and <em>Young Crocolisk Skins</em> are handed in.`,
           quests: [],
         },
         {
           n: "4", title: "Whelgar's Excavation Site (38.2,50.9).",
-          text: `Merrin Rockweaver (38.8,52.3): the excavation report. Ormer Ironbraid: <em>Ormer's Revenge</em> (1,950 → 2,200 → 2,950): Mottled Raptors and Screechers west of the dig (24.7,48.6), Scytheclaws and Razormaws around 34.6,48.0, then Sarltooth on the hilltop at 33.3,51.5 (Thrash; climb from 31.5,48.9). Prospector Whelgar (38.8,52.4): <em>Uncovering the Past</em> (2,200; four tablet fragments around 34.3,49.5; Forever lowered its required level from 25 to 22). Howin Kindfeather stands east of the dig; his quests come with the <em>Crocs of the Sky</em> crate in R1.`,
+          text: `Merrin Rockweaver ${WAY("Wetlands", 38.8, 52.3, "Merrin Rockweaver")}: ${TURN} <em>In Search of the Excavation Team</em>, then ${ACC} the excavation report back to Tarrel (<em>In Search of The Excavation Team</em>). Ormer Ironbraid: ${ACC} <em>Ormer's Revenge</em> (1,950 → 2,200 → 2,950); Ormer takes each step and gives the next. Prospector Whelgar ${WAY("Wetlands", 38.8, 52.4, "Prospector Whelgar")}: ${ACC} <em>Uncovering the Past</em> (2,200; four tablet fragments around ${WAY("Wetlands", 34.3, 49.5, "Tablet fragments")}; Forever lowered its required level from 25 to 22). Step 1: Mottled Raptors and Screechers west of the dig ${WAY("Wetlands", 24.7, 48.6, "Mottled Raptors and Screechers")}; Ormer: ${TURN} step 1, then ${ACC} step 2. Step 2: Scytheclaws and Razormaws around ${WAY("Wetlands", 34.6, 48.0, "Scytheclaws and Razormaws")}; Ormer: ${TURN} step 2, then ${ACC} step 3. Step 3: Sarltooth on the hilltop at ${WAY("Wetlands", 33.3, 51.5, "Sarltooth")} (Thrash; climb from ${WAY("Wetlands", 31.5, 48.9, "Climb to Sarltooth")}); Ormer: ${TURN} step 3. Whelgar: ${TURN} <em>Uncovering the Past</em>. Howin Kindfeather stands east of the dig; his quests come with the <em>Crocs of the Sky</em> crate in R1.`,
           quests: [
             q(305, "In Search of the Excavation Team", 970, 24, 21, WL, ["core"], { after: [98461], note: "Merrin Rockweaver at the dig." }),
             q(294, "Ormer's Revenge (raptors)", 1950, 24, 22, WL, ["core"], { note: "Mottled Raptors and Screechers west of the dig." }),
@@ -178,7 +189,7 @@
         },
         {
           n: "5", title: "Dragonmaw camp, the Crossroads and Rethiel.",
-          text: `<strong>Dragonmaw camp</strong> (44.8,43.9): 8 War Banners. <strong>Crossroads</strong> (49.9,39.4): Einar Stonegrip, <em>Daily Delivery</em> (830). <strong>Rethiel</strong> (56.4,40.4): <em>The Greenwarden</em> → <em>Tramping Paws</em> (1,250; 25 gnolls, 63.9,62.7 south to 55.7,75.1) → <em>Fire Taboo</em> (1,850; Crude Flint from the gnolls at 44.2,33.9) → <em>Blisters on the Land</em> (2,650; 8 stealthed level 26–27 Fen Creepers along the streams; at 25 or with the group). Red Whelps along the Green Belt east of Rethiel for the 10 Pristine Crimson Scales (<em>Crocs of the Sky</em>). Thelgen Rock spiders in the south-east for the <em>Alchemical Hazards</em> gland; the Excavation Site: Wetlands portal is nearby (about 47.8,56.3) if a group wants it.`,
+          text: `<strong>Dragonmaw camp</strong> ${WAY("Wetlands", 44.8, 43.9, "Dragonmaw camp")}: 8 War Banners. <strong>Crossroads</strong> ${WAY("Wetlands", 49.9, 39.4, "Einar Stonegrip, the Crossroads")}, Einar Stonegrip: ${ACC} <em>Daily Delivery</em> (830). <strong>Rethiel</strong> ${WAY("Wetlands", 56.4, 40.4, "Rethiel")}: ${TURN} <em>The Greenwarden</em>, then ${ACC} <em>Tramping Paws</em> (1,250; 25 gnolls, ${WAY("Wetlands", 63.9, 62.7, "Tramping Paws gnolls, north end")} south to ${WAY("Wetlands", 55.7, 75.1, "Tramping Paws gnolls, south end")}). Rethiel: ${TURN} <em>Tramping Paws</em>, then ${ACC} <em>Fire Taboo</em> (1,850; Crude Flint from the gnolls at ${WAY("Wetlands", 44.2, 33.9, "Crude Flint gnolls")}). Rethiel: ${TURN} <em>Fire Taboo</em>, then ${ACC} <em>Blisters on the Land</em> (2,650; 8 stealthed level 26–27 Fen Creepers along the streams; at 25 or with the group), and ${TURN} it back at Rethiel. Red Whelps along the Green Belt east of Rethiel for the 10 Pristine Crimson Scales (<em>Crocs of the Sky</em>). Thelgen Rock spiders in the south-east for the <em>Alchemical Hazards</em> gland; the Excavation Site: Wetlands portal is nearby (about ${WAY("Wetlands", 47.8, 56.3, "Excavation Site entrance")}) if a group wants it.`,
           quests: [
             q(463, "The Greenwarden", 830, 21, 20, WL, ["core"], { note: "Rethiel the Greenwarden (56.4,40.4)." }),
             q(276, "Tramping Paws", 1250, 21, 20, WL, [], { after: [463], note: "25 gnolls in the south-east." }),
@@ -193,7 +204,7 @@
         },
         {
           n: "7", title: "Back to Menethil.",
-          text: `Turn in at Karl (→ <em>Reclaiming Goods</em>), Halloran (→ <em>Apprentice's Duties</em>, 2,100; <em>Crocs of the Sky</em> → <em>Crimson Crate Delivery</em>, 1,200, which with Howin's two Razormaw quests, 4,700, belongs to R1), Stoutfist (→ <em>Nek'rosh's Gambit</em>, 1,900, finished in R1 at the catapult, 47.3,46.9), Caitlin, Sida, Valstag, Fitzsimmons (→ <em>Lifting the Curse</em>).`,
+          text: `Karl: ${TURN} <em>Claws from the Deep</em>, then ${ACC} <em>Reclaiming Goods</em>. Halloran: ${TURN} <em>Daily Delivery</em> and ${TURN} <em>Young Crocolisk Skins</em>, then ${ACC} <em>Apprentice's Duties</em> (2,100); if you took <em>Crocs of the Sky</em>, ${TURN} it, then ${ACC} <em>Crimson Crate Delivery</em> (1,200, which with Howin's two Razormaw quests, 4,700, belongs to R1). Stoutfist: ${TURN} <em>War Banners</em>, then ${ACC} <em>Nek'rosh's Gambit</em> (1,900, finished in R1 at the catapult, ${WAY("Wetlands", 47.3, 46.9, "Catapult")}). Caitlin: ${TURN} <em>Alchemical Hazards</em>. Sida: ${TURN} <em>Digging Through the Ooze</em>. Valstag: ${TURN} <em>Spoils of War</em>. Fitzsimmons: ${TURN} <em>The Cursed Crew</em>, then ${ACC} <em>Lifting the Curse</em>. Tarrel: ${TURN} the excavation report (<em>In Search of The Excavation Team</em>).`,
           quests: [
             q(279, "Claws from the Deep", 1750, 22, 20, WL, ["core"], { ledger: "wl-claws", note: "Karl Boran; 12 Bluegill Murlocs and Gobbler." }),
             q(484, "Young Crocolisk Skins", 1750, 22, 18, WL, ["core"], { note: "Six skins in Forever." }),
@@ -209,7 +220,7 @@
         },
         {
           n: "8", title: "Second short north-west trip (about ten minutes).",
-          text: `The three hovels at 13.5,41.5 → 13.5,38.4 → 13.9,34.8 (510 + 510 + 1,000 → <em>Return the Statuette</em>, 1,500). Giant crocolisks at 17.8,26.3 for <em>Apprentice's Duties</em>. Captain Halyndor's ship (15.5,23.5), entered by the broken mast; the key opens the strongbox through the north hull hole (14.4,24.0), a short dive → <em>The Eye of Paleth</em> (1,200). Back in town: Karl → Stoutfist (200) → <em>A Friend of the Family</em> for Stormwind; Halloran; Glorin Steelbrow (10.6,60.5) → <em>Cleansing the Eye</em> (2,450 in the Stormwind Cathedral).`,
+          text: `The three hovels at ${WAY("Wetlands", 13.5, 41.5, "Hovel 1")} → ${WAY("Wetlands", 13.5, 38.4, "Hovel 2")} → ${WAY("Wetlands", 13.9, 34.8, "Hovel 3")}. First hovel: ${TURN} <em>Reclaiming Goods</em> (510), then ${ACC} <em>The Search Continues</em>. Second hovel: ${TURN} <em>The Search Continues</em> (510), then ${ACC} <em>Search More Hovels</em>. Third hovel: ${TURN} <em>Search More Hovels</em> (1,000), then ${ACC} <em>Return the Statuette</em> (1,500). Giant crocolisks at ${WAY("Wetlands", 17.8, 26.3, "Giant crocolisks")} for <em>Apprentice's Duties</em>. Captain Halyndor's ship ${WAY("Wetlands", 15.5, 23.5, "Captain Halyndor's ship")}, entered by the broken mast; the key opens the strongbox through the north hull hole ${WAY("Wetlands", 14.4, 24.0, "Strongbox, north hull hole")}, a short dive. At the strongbox: ${TURN} <em>Lifting the Curse</em>, then ${ACC} <em>The Eye of Paleth</em> (1,200). Back in town, Karl: ${TURN} <em>Return the Statuette</em>, then ${ACC} the 200-XP delivery of the statuette to Stoutfist (also named <em>Return the Statuette</em>). Stoutfist: ${TURN} the delivery, then ${ACC} <em>A Friend of the Family</em> for Stormwind. Halloran: ${TURN} <em>Apprentice's Duties</em>. Glorin Steelbrow ${WAY("Wetlands", 10.6, 60.5, "Glorin Steelbrow")}: ${TURN} <em>The Eye of Paleth</em>, then ${ACC} <em>Cleansing the Eye</em> (2,450 in the Stormwind Cathedral).`,
           quests: [
             q(281, "Reclaiming Goods", 510, 25, 20, WL, [], { after: [279], note: "First hovel (13.5,41.5)." }),
             q(284, "The Search Continues", 510, 25, 20, WL, [], { after: [281], note: "Second hovel (13.5,38.4)." }),
@@ -223,9 +234,9 @@
         },
         {
           n: "9", title: "Leave.",
-          text: `Fly Menethil → Ironforge: Gerrig, <em>Knowledge in the Deeps</em>. Tram to Stormwind, where block C starts with <em>Cleansing the Eye</em> at the Cathedral.`,
+          text: `Fly Menethil → Ironforge. Gerrig ${WAY("Ironforge", 50.8, 5.6, "Gerrig Bonegrip")}: ${TURN} <em>Knowledge in the Deeps</em>. Tram to Stormwind, where block C starts by turning in <em>Cleansing the Eye</em> at the Cathedral.`,
           quests: [
-            dq(971, "Knowledge in the Deeps", 2750, 3.75, 23, 10, BFD, ["core"], { note: "The Lorgalis Manuscript from Blackfathom Deeps; Gerrig Bonegrip, Ironforge." }),
+            dq(971, "Knowledge in the Deeps", 2750, 2.375, 23, 10, BFD, ["core"], { note: "The Lorgalis Manuscript from Blackfathom Deeps; Gerrig Bonegrip, Ironforge." }),
             q(293, "Cleansing the Eye", 2450, 30, 22, WL, ["optional"], { after: [292], note: "Archbishop Benedictus, Stormwind Cathedral (block C, step 1); the route counts it here." }),
           ],
         },
@@ -235,20 +246,20 @@
       id: "C",
       title: "Redridge leftovers, Duskwood, and the Stockade",
       range: "25–28",
-      leaveAt: 28.5,
-      leaveText: "Leave at 28.5 for Gnomeregan",
+      leaveAt: 28.7,
+      leaveText: "Leave at 28.7 for Gnomeregan",
       accent: "#9b83d7",
       kill: { open: 19600 },
       intro: `Turn in banked Duskwood quests at Darkshire on arrival and skip them below. Bind the hearthstone in Darkshire for this block (Tavernkeep Smitts, 73.8,44.5); a western trip can then end with a hearth whenever the stone is ready (the cooldown is an hour, so about every other trip). Run the Stockade whenever the group forms after the Darkshire pickup round; Bazil Thredd is 29. The Duskwood figure assumes <em>The Valor Family</em> and <em>Night Watch</em> 1–2 are still open; if you turned them in before the cap, they show as done.`,
       steps: [
         {
           n: "1", title: "Stormwind.",
-          text: `Archbishop Benedictus, Cathedral of Light: <em>Cleansing the Eye</em>; Highlord Bolvar Fordragon in the Keep, then Lord Grayson Shadowbreaker in the Cathedral: <em>A Friend of the Family</em>. Billibub Cogspinner, Dwarven District (55.3,7.1): a Bronze Tube for <em>Look to the Stars</em> (4,500 XP over three steps; Herble in Darkshire also sells them, with limited stock). Fly to Lakeshire.`,
+          text: `Archbishop Benedictus ${WAY("Stormwind City", 39.6, 27.2, "Archbishop Benedictus")}, Cathedral of Light: ${TURN} <em>Cleansing the Eye</em>. Highlord Bolvar Fordragon in the Keep: ${TURN} <em>A Friend of the Family</em>, then ${ACC} its next step (same name); Lord Grayson Shadowbreaker in the Cathedral: ${TURN} it. Billibub Cogspinner, Dwarven District ${WAY("Stormwind City", 55.3, 7.1, "Billibub Cogspinner")}: buy a Bronze Tube for <em>Look to the Stars</em>, which Viktori gives in Darkshire in step 3 (4,500 XP over three steps; Herble in Darkshire also sells them, with limited stock). Fly to Lakeshire.`,
           quests: [],
         },
         {
           n: "2", title: "Lakeshire.",
-          text: `Martie Jainrose (21.9,46.3): <em>An Unwelcome Guest</em> (1,950; Bellygrub, 15.7,49.4). Verner Osgood (31.0,47.3): <em>Howling in the Hills</em> (2,000; Yowler, 27.6,21.4; needs <em>A Baying of Gnolls</em> done). Guard Berton (26.3,46.6): <em>What Comes Around…</em> if not held. At 25 or below, Foreman Oslow's <em>The Everstill Bridge</em> (1,550) and Dockmaster Baren's <em>Murloc Poachers</em> and <em>Selling Fish</em> (2,800) still pay full. Fly Lakeshire → Darkshire.`,
+          text: `Martie Jainrose ${WAY("Redridge Mountains", 21.9, 46.3, "Martie Jainrose")}: ${ACC} <em>An Unwelcome Guest</em> (1,950; Bellygrub, ${WAY("Redridge Mountains", 15.7, 49.4, "Bellygrub")}). Verner Osgood ${WAY("Redridge Mountains", 31.0, 47.3, "Verner Osgood")}: ${ACC} <em>Howling in the Hills</em> (2,000; Yowler, ${WAY("Redridge Mountains", 27.6, 21.4, "Yowler")}; needs <em>A Baying of Gnolls</em> done). Guard Berton ${WAY("Redridge Mountains", 26.3, 46.6, "Guard Berton")}: ${ACC} <em>What Comes Around…</em> if not held. At 25 or below, three more still pay full: Foreman Oslow: ${ACC} <em>The Everstill Bridge</em> (1,550); Dockmaster Baren: ${ACC} <em>Murloc Poachers</em> and ${ACC} <em>Selling Fish</em> (2,800). Back in town: ${TURN} <em>An Unwelcome Guest</em> to Martie, ${TURN} <em>Howling in the Hills</em> to Verner, and ${TURN} any of the three extras to its giver. Fly Lakeshire → Darkshire.`,
           quests: [
             q(34, "An Unwelcome Guest", 1950, 24, 18, RR, ["core"], { note: "Bellygrub on the western farms (15.7,49.4)." }),
             q(126, "Howling in the Hills", 2000, 25, 15, RR, ["core"], { note: "Yowler (27.6,21.4); needs A Baying of Gnolls done." }),
@@ -259,14 +270,14 @@
         },
         {
           n: "3", title: "Darkshire pickup round.",
-          text: `Sirra Von'Indi (72.6,47.6): <em>The Valor Family</em> (1,750; the Raven Hill Tome) if not done. Councilman Millstipe (71.9,47.8): <strong>Crime and Punishment</strong> (6,720 observed). Commander Althea Ebonlocke (73.6,46.8): <em>The Night Watch</em> 1 (1,450) and 2 (2,100) if not done. Madame Eva (75.7,45.3): <em>The Totem of Infliction</em> (2,550) if not held; <em>The Legend of Stalvan</em> (see the extras). Chef Grual (73.9,43.5): <em>Seasoned Wolf Kabobs</em> (2,000) if not held. Elaine Carevin (75.3,48.6): <em>Deliveries to Sven</em> (920), <em>The Hermit</em> (1,000). Viktori Prism'Antras (79.8,47.9): <em>Look to the Stars</em> (2,000).`,
+          text: `Sirra Von'Indi ${WAY("Duskwood", 72.6, 47.6, "Sirra Von'Indi")}: ${ACC} <em>The Valor Family</em> (1,750; the Raven Hill Tome) if not done. Councilman Millstipe ${WAY("Duskwood", 71.9, 47.8, "Councilman Millstipe")}: ${ACC} <strong>Crime and Punishment</strong> (4,410). Commander Althea Ebonlocke ${WAY("Duskwood", 73.6, 46.8, "Commander Althea Ebonlocke")}: ${ACC} <em>The Night Watch</em> 1 (1,450) if not done; she gives step 2 (2,100) once step 1 is turned in. Madame Eva ${WAY("Duskwood", 75.7, 45.3, "Madame Eva")}: ${ACC} <em>The Totem of Infliction</em> (2,550) if not held; she also starts <em>The Legend of Stalvan</em> (see the extras). Chef Grual ${WAY("Duskwood", 73.9, 43.5, "Chef Grual")}: ${ACC} <em>Seasoned Wolf Kabobs</em> (2,000) if not held. Elaine Carevin ${WAY("Duskwood", 75.3, 48.6, "Elaine Carevin")}: ${ACC} <em>Deliveries to Sven</em> (920) and ${ACC} <em>The Hermit</em> (1,000). Viktori Prism'Antras ${WAY("Duskwood", 79.8, 47.9, "Viktori Prism'Antras")}: ${ACC} <em>Look to the Stars</em> and ${TURN} it at once with the Bronze Tube (2,000), then ${ACC} step 2.`,
           quests: [
             q(174, "Look to the Stars (Bronze Tube)", 2000, 25, 20, DW, ["core"], { note: "Viktori Prism'Antras, with the Bronze Tube." }),
           ],
         },
         {
           n: "4", title: "Tranquil Gardens Cemetery.",
-          text: `Blind Mary (82.0,59.0): <em>Look to the Stars</em> 2 → 3 (1,000; the Insane Ghoul at the chapel, 80.9,71.8, 1,500). <em>The Night Watch</em> 1: 8 Skeletal Warriors and 6 Skeletal Mages (79.3,70.3). Skeleton Fingers for the Totem.`,
+          text: `Blind Mary ${WAY("Duskwood", 82.0, 59.0, "Blind Mary")}: ${TURN} <em>Look to the Stars</em> step 2 (1,000), then ${ACC} step 3 (the Insane Ghoul at the chapel, ${WAY("Duskwood", 80.9, 71.8, "Insane Ghoul, chapel")}, 1,500). For <em>The Night Watch</em> 1: 8 Skeletal Warriors and 6 Skeletal Mages ${WAY("Duskwood", 79.3, 70.3, "Skeletal Warriors and Mages")}. Skeleton Fingers for the Totem. Back in town, Althea: ${TURN} <em>The Night Watch</em> 1, then ${ACC} step 2. Viktori: ${TURN} <em>Look to the Stars</em> step 3.`,
           quests: [
             q(175, "Look to the Stars (Blind Mary)", 1000, 25, 20, DW, ["core"], { after: [174], note: "Blind Mary (82.0,59.0)." }),
             q(177, "Look to the Stars (Insane Ghoul)", 1500, 25, 20, DW, ["core"], { after: [175], note: "The Insane Ghoul at the chapel (80.9,71.8)." }),
@@ -275,7 +286,7 @@
         },
         {
           n: "5", title: "Western trips (three of them).",
-          text: `Hearth back when the stone is ready, otherwise the road east. Sven Yorgen (7.8,34.1), <em>Deliveries to Sven</em> → <em>Sven's Revenge</em> (1,000; the stump at his old farm, 49.9,77.8) → <em>Sven's Camp</em> (1,000) → <em>The Shadowy Figure</em> (510) → Eva, Daltry, Smitts in Darkshire (200 + 200 → <em>Finding the Shadowy Figure</em>, 1,000) → Jitters (18.4,56.5) → <em>Return to Sven</em> (510) → <em>Proving Your Worth</em> (2,300; 15 Skeletal Raiders, 3 Healers, 3 Warders at the crypt, 16.2,38.8) → <em>Seeking Wisdom</em> (590, Bishop Farthing in Stormwind). Abercrombie (28.0,31.5): <em>The Hermit</em> → <em>Supplies from Darkshire</em> (485) → Eva → <em>Ghost Hair Thread</em> (485, Blind Mary) → <em>Return the Comb</em> (195) → <em>Deliver the Thread</em> (1,450) → <em>Zombie Juice</em> (485, Smitts) → <em>Gather Rot Blossoms</em> (970; Raven Hill Cemetery, 21.6,45.1) → <em>Juice Delivery</em> (970, handed in in R2). Raven Hill Cemetery also covers <em>The Night Watch</em> 2 (15 Fiends, 15 Horrors) and the Totem's ghoul fangs; the Valor ghosts drop the items that start <em>Grant's Shield</em>, <em>Ira's Dagger</em>, <em>Merrick's Bow</em> and <em>Silvia's Sword</em> if you have not banked them: the Lost Knight at Raven Hill (24.2,41 and 24.6,32.2) and Tranquil Gardens (79.8,68.4; 81,67.8; 80.6,57.8), the Lost Stalker at 33.2,43.2, 41,21.4, 51,63.2 and 56.4,60.8, the Lost Watcher at 15.4,61, 30.6,60.6, 43,70, 43.2,66.2 and 75.8,23.2, the Lost Defender at 63,70. <em>Grant's Shield</em> then needs Grant's Mace from the Raven Hill Cemetery skeletons.`,
+          text: `Hearth back when the stone is ready, otherwise the road east. Sven Yorgen ${WAY("Duskwood", 7.8, 34.1, "Sven Yorgen")}: ${TURN} <em>Deliveries to Sven</em>, then ${ACC} <em>Sven's Revenge</em> (1,000; the stump at his old farm, ${WAY("Duskwood", 49.9, 77.8, "Stump at Sven's old farm")}). At the stump: ${TURN} <em>Sven's Revenge</em>, then ${ACC} <em>Sven's Camp</em> (1,000). Sven: ${TURN} <em>Sven's Camp</em>, then ${ACC} <em>The Shadowy Figure</em> (510). In Darkshire, Eva: ${TURN} <em>The Shadowy Figure</em>, then ${ACC} <em>The Shadowy Search Continues</em> (200). Daltry: ${TURN} <em>The Shadowy Search Continues</em>, then ${ACC} <em>Inquire at the Inn</em> (200). Smitts: ${TURN} <em>Inquire at the Inn</em>, then ${ACC} <em>Finding the Shadowy Figure</em> (1,000). Jitters ${WAY("Duskwood", 18.4, 56.5, "Jitters")}: ${TURN} <em>Finding the Shadowy Figure</em>, then ${ACC} <em>Return to Sven</em> (510). Sven: ${TURN} <em>Return to Sven</em>, then ${ACC} <em>Proving Your Worth</em> (2,300; 15 Skeletal Raiders, 3 Healers, 3 Warders at the crypt, ${WAY("Duskwood", 16.2, 38.8, "Crypt, Proving Your Worth")}). Sven: ${TURN} <em>Proving Your Worth</em>, then ${ACC} <em>Seeking Wisdom</em> (590; turned in to Bishop Farthing in Stormwind). Abercrombie ${WAY("Duskwood", 28.0, 31.5, "Abercrombie")}: ${TURN} <em>The Hermit</em>, then ${ACC} <em>Supplies from Darkshire</em> (485). Eva: ${TURN} <em>Supplies from Darkshire</em>, then ${ACC} <em>Ghost Hair Thread</em> (485). Blind Mary: ${TURN} <em>Ghost Hair Thread</em>, then ${ACC} <em>Return the Comb</em> (195). Eva: ${TURN} <em>Return the Comb</em>, then ${ACC} <em>Deliver the Thread</em> (1,450). Abercrombie: ${TURN} <em>Deliver the Thread</em>, then ${ACC} <em>Zombie Juice</em> (485). Smitts: ${TURN} <em>Zombie Juice</em>, then ${ACC} <em>Gather Rot Blossoms</em> (970; Raven Hill Cemetery, ${WAY("Duskwood", 21.6, 45.1, "Raven Hill Cemetery")}). Smitts: ${TURN} <em>Gather Rot Blossoms</em>, then ${ACC} <em>Juice Delivery</em> (970, handed in in R2). Raven Hill Cemetery also covers <em>The Night Watch</em> 2 (15 Fiends, 15 Horrors) and the Totem's ghoul fangs. In Darkshire, hand in what the trips finish: Sirra: ${TURN} <em>The Valor Family</em>; Grual: ${TURN} <em>Seasoned Wolf Kabobs</em>; Eva: ${TURN} <em>The Totem of Infliction</em>; Althea: ${TURN} <em>The Night Watch</em> 2. The Valor ghosts drop the items that start <em>Grant's Shield</em>, <em>Ira's Dagger</em>, <em>Merrick's Bow</em> and <em>Silvia's Sword</em> if you have not banked them: the Lost Knight at Raven Hill (${WAY("Duskwood", 24.2, 41, "Lost Knight, Raven Hill 1")} and ${WAY("Duskwood", 24.6, 32.2, "Lost Knight, Raven Hill 2")}) and Tranquil Gardens (${WAY("Duskwood", 79.8, 68.4, "Lost Knight, Tranquil Gardens 1")}; ${WAY("Duskwood", 81, 67.8, "Lost Knight, Tranquil Gardens 2")}; ${WAY("Duskwood", 80.6, 57.8, "Lost Knight, Tranquil Gardens 3")}), the Lost Stalker at ${WAY("Duskwood", 33.2, 43.2, "Lost Stalker 1")}, ${WAY("Duskwood", 41, 21.4, "Lost Stalker 2")}, ${WAY("Duskwood", 51, 63.2, "Lost Stalker 3")} and ${WAY("Duskwood", 56.4, 60.8, "Lost Stalker 4")}, the Lost Watcher at ${WAY("Duskwood", 15.4, 61, "Lost Watcher 1")}, ${WAY("Duskwood", 30.6, 60.6, "Lost Watcher 2")}, ${WAY("Duskwood", 43, 70, "Lost Watcher 3")}, ${WAY("Duskwood", 43.2, 66.2, "Lost Watcher 4")} and ${WAY("Duskwood", 75.8, 23.2, "Lost Watcher 5")}, the Lost Defender at ${WAY("Duskwood", 63, 70, "Lost Defender")}. When an item drops, ${ACC} its quest from the item; ${TURN} each finished weapon quest to Sirra in Darkshire. <em>Grant's Shield</em> then needs Grant's Mace from the Raven Hill Cemetery skeletons.`,
           quests: [
             q(96139, "The Valor Family", 1750, 22, 18, DW, ["core"], { note: "Sirra Von'Indi; the Raven Hill Tome. Unlocks the four weapon quests." }),
             q(164, "Deliveries to Sven", 920, 23, 17, DW, ["core"], { note: "Elaine Carevin → Sven Yorgen (7.8,34.1)." }),
@@ -307,20 +318,20 @@
         },
         {
           n: "6", title: "The Stockade.",
-          text: `Fly Darkshire → Stormwind. Bishop Farthing (39.3,28.0): <em>Seeking Wisdom</em> → <em>The Doomed Fleet</em> (carry to R1). Run the Stockade; turn in at Warden Thelwater and Nikova Raskol. Hearth to Darkshire: <em>Crime and Punishment</em>. Fly to Lakeshire: <em>What Comes Around…</em>.`,
+          text: `Fly Darkshire → Stormwind. Bishop Farthing ${WAY("Stormwind City", 39.3, 28.0, "Bishop Farthing")}: ${TURN} <em>Seeking Wisdom</em>, then ${ACC} <em>The Doomed Fleet</em> (carry to R1). Run the Stockade. Warden Thelwater ${WAY("Stormwind City", 41.1, 58.1, "Warden Thelwater")}: ${TURN} <em>Quell the Uprising</em> and ${TURN} <em>The Stockade Riots</em>. Nikova Raskol ${WAY("Stormwind City", 72.4, 47.7, "Nikova Raskol")}: ${TURN} <em>The Color of Blood</em>. Hearth to Darkshire. Councilman Millstipe ${WAY("Duskwood", 71.9, 47.8, "Councilman Millstipe")}: ${TURN} <em>Crime and Punishment</em>. Fly to Lakeshire. Guard Berton ${WAY("Redridge Mountains", 26.3, 46.6, "Guard Berton")}: ${TURN} <em>What Comes Around…</em>.`,
           quests: [
             q(269, "Seeking Wisdom", 590, 29, 20, DW, ["core"], { after: [323], note: "Bishop Farthing, Stormwind Cathedral." }),
-            dq(387, "Quell the Uprising", 2650, 3.2, 26, 22, STOCKS, ["core"], { note: "Warden Thelwater." }),
-            dq(388, "The Color of Blood", 2650, 3.2, 26, 22, STOCKS, ["core"], { note: "Nikova Raskol, Old Town." }),
-            dq(391, "The Stockade Riots", 2350, 3.2, 29, 16, STOCKS, ["core"], { note: "Bazil Thredd (level 29); Thelwater." }),
-            dq(377, "Crime and Punishment", 2100, 3.2, 26, 22, STOCKS, ["core"], { note: "Councilman Millstipe, Darkshire (6,720 observed)." }),
-            dq(386, "What Comes Around…", 2000, 3.2, 25, 22, STOCKS, ["core"], { note: "Guard Berton, Lakeshire." }),
+            dq(387, "Quell the Uprising", 2650, 2.1, 26, 22, STOCKS, ["core"], { note: "Warden Thelwater." }),
+            dq(388, "The Color of Blood", 2650, 2.1, 26, 22, STOCKS, ["core"], { note: "Nikova Raskol, Old Town." }),
+            dq(391, "The Stockade Riots", 2350, 2.1, 29, 16, STOCKS, ["core"], { note: "Bazil Thredd (level 29); Thelwater." }),
+            dq(377, "Crime and Punishment", 2100, 2.1, 26, 22, STOCKS, ["core"], { note: "Councilman Millstipe, Darkshire." }),
+            dq(386, "What Comes Around…", 2000, 2.1, 25, 22, STOCKS, ["core"], { note: "Guard Berton, Lakeshire." }),
             run("run-stocks", "The Stockade run: kill XP", 5400, STOCKS, "Estimate for one five-player run."),
           ],
         },
         {
           n: "Extras", title: "Extras for this block, in order of value.",
-          text: `<em>The Legend of Stalvan</em> (9,140 XP over twelve talk-and-fetch steps from Madame Eva through Moonbrook, Goldshire, Stormwind and the Eastvale Logging Camp; it fits the Stockade trip; the final kill, 4,100, is a level-35 quest for level 30) · <em>Worgen in the Woods</em> 1 from Calor (75.4,48.0; 1,150, Shadow Weavers at 60.8,29.7; listed under R2) · the Jitters food chain (2,340 at 26 or below). The route's block C total counts the twelve Stalvan steps.`,
+          text: `<em>The Legend of Stalvan</em> (9,140 XP over twelve talk-and-fetch steps from Madame Eva through Moonbrook, Goldshire, Stormwind and the Eastvale Logging Camp; it fits the Stockade trip): ${ACC} step 1 from Madame Eva; each step is turned in to the NPC or object that gives the next. The final kill, 4,100, is a level-35 quest for level 30. Calor ${WAY("Duskwood", 75.4, 48.0, "Calor")}: ${ACC} <em>Worgen in the Woods</em> 1 (1,150, Shadow Weavers at ${WAY("Duskwood", 60.8, 29.7, "Shadow Weavers")}; listed under R2), then ${TURN} it to him. The Jitters food chain (2,340 at 26 or below): ${ACC} <em>Raven Hill</em> from Elaine Carevin; each step is turned in to the NPC who gives the next, ending at Jitters. The route's block C total counts the twelve Stalvan steps.`,
           quests: [
             q(66, "The Legend of Stalvan (1)", 230, 28, 22, DW, ["optional"], { note: "Madame Eva." }),
             q(67, "The Legend of Stalvan (2)", 1150, 28, 22, DW, ["optional"], { after: [66] }),
@@ -343,31 +354,31 @@
     {
       id: "G",
       title: "Gnomeregan",
-      range: "28.5+ → 30",
+      range: "28.7+ → 30",
       leaveAt: null,
       leaveText: "The finish",
       accent: "#d5aa52",
       kill: { open: 0 },
-      intro: `About 50,500 quest XP plus a long dungeon's kills. No beta group has recorded a clear; the bosses run from 26 to 34.`,
+      intro: `About 35,000 quest XP plus a long dungeon's kills, about 57,000 XP in all. No beta group has recorded a clear; the bosses run from 26 to 34.`,
       steps: [
         {
           n: "1", title: "Ironforge.",
-          text: `Fly to Ironforge, bind the hearthstone there, and collect the Tinker Town quests: <em>Save Techbot's Brain!</em> (Tinkmaster Overspark), <em>The Day After</em> (Gnoarn) → <em>Gnogaine</em> and <em>The Only Cure is More Green Glow</em> (Ozzie Togglevolt, Kharanos), <em>Essential Artificials</em> (Klockmort Spannerspan, from 24), <em>Data Rescue</em> (Master Mechanic Castpipe, from 25), <em>The Grand Betrayal</em> (High Tinker Mekkatorque, from 25), with <em>Gyrodrillmatic Excavationators</em> already held. Skip <em>A Fine Mess</em> (Booty Bay turn-in).`,
+          text: `Fly to Ironforge, bind the hearthstone there, and collect the Tinker Town quests. Tinkmaster Overspark ${WAY("Ironforge", 69.2, 50.6, "Tinkmaster Overspark and Gnoarn")}: ${ACC} <em>Save Techbot's Brain!</em>. Gnoarn: ${ACC} <em>The Day After</em>. Ozzie Togglevolt, Kharanos ${WAY("Dun Morogh", 45.9, 49.4, "Ozzie Togglevolt")}: ${TURN} <em>The Day After</em>, then ${ACC} <em>Gnogaine</em>; he gives <em>The Only Cure is More Green Glow</em> once <em>Gnogaine</em> is turned in. Klockmort Spannerspan ${WAY("Ironforge", 69.8, 48.1, "Klockmort Spannerspan")}: ${ACC} <em>Essential Artificials</em> (from 24). Master Mechanic Castpipe ${WAY("Ironforge", 68.7, 49.0, "Master Mechanic Castpipe")}: ${ACC} <em>Data Rescue</em> (from 25). High Tinker Mekkatorque ${WAY("Ironforge", 69.5, 50.3, "High Tinker Mekkatorque")}: ${ACC} <em>The Grand Betrayal</em> (from 25). <em>Gyrodrillmatic Excavationators</em> is already in the log. Skip <em>A Fine Mess</em> (Booty Bay turn-in).`,
           quests: [
-            dq(2927, "The Day After", 220, 2.6, 27, 20, GNOMER, ["core"], { note: "Gnoarn → Ozzie Togglevolt, Kharanos." }),
+            dq(2927, "The Day After", 220, 1.8, 27, 20, GNOMER, ["core"], { note: "Gnoarn → Ozzie Togglevolt, Kharanos." }),
           ],
         },
         {
           n: "2", title: "Gnomeregan.",
-          text: `The run and the hand-ins in Tinker Town and Kharanos.`,
+          text: `The run, then the hand-ins in Tinker Town, Kharanos and Stormwind. Tinker Town: ${TURN} <em>Save Techbot's Brain!</em> to Tinkmaster Overspark, ${TURN} <em>Essential Artificials</em> to Klockmort Spannerspan, ${TURN} <em>Data Rescue</em> to Master Mechanic Castpipe and ${TURN} <em>The Grand Betrayal</em> to High Tinker Mekkatorque. Kharanos, Ozzie Togglevolt ${WAY("Dun Morogh", 45.9, 49.4, "Ozzie Togglevolt")}: ${TURN} <em>Gnogaine</em>, then ${ACC} <em>The Only Cure is More Green Glow</em> (the fallout decays on a timer) and ${TURN} it to him. Stormwind, by tram: ${TURN} <em>Gyrodrillmatic Excavationators</em> to Shoni, Dwarven District ${WAY("Stormwind City", 55.5, 12.5, "Shoni the Shilent")}.`,
           quests: [
-            dq(2922, "Save Techbot's Brain!", 2650, 2.6, 26, 20, GNOMER, ["core"], { note: "Tinkmaster Overspark." }),
-            dq(2926, "Gnogaine", 2200, 2.6, 27, 20, GNOMER, ["core"], { after: [2927], note: "Ozzie Togglevolt, Kharanos." }),
-            dq(2962, "The Only Cure is More Green Glow", 2450, 2.6, 30, 20, GNOMER, ["core"], { after: [2926], note: "Ozzie; the fallout decays on a timer." }),
-            dq(2924, "Essential Artificials", 3050, 2.6, 30, 24, GNOMER, ["core"], { note: "Klockmort Spannerspan, from 24." }),
-            dq(2930, "Data Rescue", 3650, 2.6, 30, 25, GNOMER, ["core"], { note: "Master Mechanic Castpipe, from 25." }),
-            dq(2929, "The Grand Betrayal", 2750, 2.6, 35, 25, GNOMER, ["core"], { note: "High Tinker Mekkatorque, from 25." }),
-            dq(2928, "Gyrodrillmatic Excavationators", 2450, 2.6, 30, 20, GNOMER, ["core"], { note: "Shoni, Stormwind (taken in block A, step 1)." }),
+            dq(2922, "Save Techbot's Brain!", 2650, 1.8, 26, 20, GNOMER, ["core"], { note: "Tinkmaster Overspark." }),
+            dq(2926, "Gnogaine", 2200, 1.8, 27, 20, GNOMER, ["core"], { after: [2927], note: "Ozzie Togglevolt, Kharanos." }),
+            dq(2962, "The Only Cure is More Green Glow", 2450, 1.8, 30, 20, GNOMER, ["core"], { after: [2926], note: "Ozzie; the fallout decays on a timer." }),
+            dq(2924, "Essential Artificials", 3050, 1.8, 30, 24, GNOMER, ["core"], { note: "Klockmort Spannerspan, from 24." }),
+            dq(2930, "Data Rescue", 3650, 1.8, 30, 25, GNOMER, ["core"], { note: "Master Mechanic Castpipe, from 25." }),
+            dq(2929, "The Grand Betrayal", 2750, 1.8, 35, 25, GNOMER, ["core"], { note: "High Tinker Mekkatorque, from 25." }),
+            dq(2928, "Gyrodrillmatic Excavationators", 2450, 1.8, 30, 20, GNOMER, ["core"], { note: "Shoni, Stormwind (taken in block A, step 1)." }),
             run("run-gnomer", "Gnomeregan run: kill XP", 22000, GNOMER, "Estimate for one long five-player run."),
           ],
         },
@@ -385,7 +396,7 @@
       steps: [
         {
           n: "1", title: "Menethil.",
-          text: `Glorin Steelbrow: <em>The Doomed Fleet</em> (1,200) → <em>Lightforge Iron</em> (590) → <em>The Lost Ingots</em> (1,750; murlocs at 10.1,69.5, poor drop) → <em>Blessed Arm</em> (1,200, paid in Stormwind on the next visit). Harlo Barnaby (10.9,55.9): <em>Fall of Dun Modr</em> (1,000; Longbraid at Dun Modr).`,
+          text: `Glorin Steelbrow ${WAY("Wetlands", 10.6, 60.5, "Glorin Steelbrow")}: ${TURN} <em>The Doomed Fleet</em> (1,200), then ${ACC} <em>Lightforge Iron</em> (590). The wreck of the <em>Flying Osprey</em> south of town: ${TURN} <em>Lightforge Iron</em>, then ${ACC} <em>The Lost Ingots</em> (1,750; murlocs at ${WAY("Wetlands", 10.1, 69.5, "Lost Ingots murlocs")}, poor drop). Glorin: ${TURN} <em>The Lost Ingots</em>, then ${ACC} <em>Blessed Arm</em> (1,200, paid in Stormwind on the next visit). Harlo Barnaby ${WAY("Wetlands", 10.9, 55.9, "Harlo Barnaby")}: ${ACC} <em>Fall of Dun Modr</em> (1,000; Longbraid at Dun Modr).`,
           quests: [
             q(270, "The Doomed Fleet", 1200, 29, 20, WL, [], { after: [269], note: "From Bishop Farthing (block C); Glorin Steelbrow." }),
             q(321, "Lightforge Iron", 590, 29, 20, WL, [], { after: [270] }),
@@ -395,7 +406,7 @@
         },
         {
           n: "2", title: "On the road east.",
-          text: `<em>Crimson Crate Delivery</em> to Howin Kindfeather east of Whelgar's, then his <em>Razormaw Needling</em> and <em>Trying Times</em> (2,350 each; Razormaw raptors at Raptor Ridge in the north-east and Saltspray Glen in the north-west); the catapult at 47.3,46.9 for <em>Nek'rosh's Gambit</em>; anything block B left (<em>Apprentice's Duties</em>, the <em>Cursed Crew</em> chain, <em>Blisters on the Land</em>).`,
+          text: `Howin Kindfeather east of Whelgar's: ${TURN} <em>Crimson Crate Delivery</em>, then ${ACC} <em>Razormaw Needling</em> and ${ACC} <em>Trying Times</em> (2,350 each; Razormaw raptors at Raptor Ridge in the north-east and Saltspray Glen in the north-west); back at Howin, ${TURN} both. The catapult at ${WAY("Wetlands", 47.3, 46.9, "Catapult")}: ${TURN} <em>Nek'rosh's Gambit</em>; with the group for the step-3 extras, also ${ACC} <em>Defeat Nek'rosh</em> there. Finish anything block B left (<em>Apprentice's Duties</em>, the <em>Cursed Crew</em> chain, <em>Blisters on the Land</em>).`,
           quests: [
             q(98240, "Crimson Crate Delivery", 1200, 29, 19, WL, [], { after: [98072], note: "After Crocs of the Sky; Howin Kindfeather east of Whelgar's." }),
             q(98245, "Razormaw Needling", 2350, 29, 21, WL, [], { after: [98240], note: "Razormaw raptors at Raptor Ridge and Saltspray Glen." }),
@@ -405,7 +416,7 @@
         },
         {
           n: "3", title: "Dun Modr (49.9,18.3) at level 28.",
-          text: `Longbraid: <em>Fall of Dun Modr</em>. Rhag Garmason, <em>The Thandol Span</em> (2,500 × 3; the first step is group-flagged: Ol' Rustlocke's body is down in the span at 51.2,8.0 among the Dark Irons, so bring the group or fight through; then the report, and the explosives on the Arathi side at Arathi 48.7,87.9 up the ramp at 52.5,90.4) → <em>Plea To The Alliance</em> (1,250). <strong>Group extras</strong> here: Motley Garmason's <em>The Dark Iron War</em> (2,450; in Classic it gates <em>The Fury Runs Deep</em>, the Stockade's Kam Deepfury quest, probably about 8,500 in the beta, which would need a second Stockade run), Longbraid's <em>A Grim Task</em> (3,350; Balgaras at 46.8,16.0 or 61.8,31.0), <em>Defeat Nek'rosh</em> (2,550), Stoutfist's <em>Forced Disarmament</em> (3,050).`,
+          text: `Longbraid: ${TURN} <em>Fall of Dun Modr</em>. Rhag Garmason: ${ACC} <em>The Thandol Span</em> (2,500 × 3). The first step is group-flagged: Ol' Rustlocke's body is down in the span at ${WAY("Wetlands", 51.2, 8.0, "Ol' Rustlocke's body")} among the Dark Irons, so bring the group or fight through; at the body ${TURN} step 1, then ${ACC} step 2, the report. Rhag: ${TURN} the report, then ${ACC} step 3, the explosives on the Arathi side at ${WAY("Arathi Highlands", 48.7, 87.9, "Thandol Span explosives")} up the ramp at ${WAY("Arathi Highlands", 52.5, 90.4, "Ramp to the explosives")}. Rhag: ${TURN} step 3, then ${ACC} <em>Plea To The Alliance</em> (1,250). <strong>Group extras</strong> here: Motley Garmason: ${ACC} <em>The Dark Iron War</em> (2,450) and ${TURN} it to him; in Classic it gates <em>The Fury Runs Deep</em>, the Stockade's Kam Deepfury quest (5,775), which would need a second Stockade run: ${ACC} it from Motley only if that run will happen, and it is turned in to him afterwards. Longbraid: ${ACC} <em>A Grim Task</em> (3,350; Balgaras at ${WAY("Wetlands", 46.8, 16.0, "Balgaras 1")} or ${WAY("Wetlands", 61.8, 31.0, "Balgaras 2")}) and ${TURN} it to him. <em>Defeat Nek'rosh</em> (2,550) comes from the catapult in step 2 and is turned in to Stoutfist in Menethil, as is Stoutfist's own <em>Forced Disarmament</em> (3,050).`,
           quests: [
             q(472, "Fall of Dun Modr", 1000, 25, 25, WL, [], { note: "Harlo Barnaby → Longbraid." }),
             q(631, "The Thandol Span (Ol' Rustlocke)", 2500, 31, 28, WL, ["group"], { note: "Group-flagged: down in the span among the Dark Irons." }),
@@ -415,12 +426,12 @@
             q(304, "A Grim Task", 3350, 34, 26, WL, ["extra", "group"], { note: "Balgaras at 46.8,16.0 or 61.8,31.0." }),
             q(474, "Defeat Nek'rosh", 2550, 32, 23, WL, ["extra", "group"], { after: [465] }),
             q(98293, "Forced Disarmament", 3050, 30, 22, WL, ["extra", "group"], { note: "Forever-new; Captain Stoutfist." }),
-            dq(378, "The Fury Runs Deep", 2750, 3.2, 27, 22, STOCKS, ["extra", "group"], { after: [303], note: "Kam Deepfury: a second Stockade run. The route guesses about 8,500." }),
+            dq(378, "The Fury Runs Deep", 2750, 2.1, 27, 22, STOCKS, ["extra", "group"], { after: [303], note: "Kam Deepfury: a second Stockade run. About 5,800." }),
           ],
         },
         {
           n: "4", title: "Tail.",
-          text: `Foggy MacKreel (Arathi 43.3,92.6), <em>MacKreel's Moonshine</em> (3,050, 15-minute timer, take it last) → Refuge Pointe (Captain Nials, 45.9,47.5; flight path 45.8,46.1) → Southshore inn (Brewmeister Bilger, 52.2,58.6; flight path 49.3,52.3) → hearth to Menethil for the last turn-ins (Sida, Halloran, Stoutfist) and fly Menethil → Ironforge. Still short? Lieutenant Farren Orinelle's Southshore chain (10,060 over six quests; murlocs at 44.0,67.6 and 42.3,68.3, naga at 57.1,67.4; the last 3,200 pays in Stormwind Keep).`,
+          text: `Foggy MacKreel ${WAY("Arathi Highlands", 43.3, 92.6, "Foggy MacKreel")}: ${ACC} <em>MacKreel's Moonshine</em> (3,050, 15-minute timer, take it last). North to Refuge Pointe, Captain Nials ${WAY("Arathi Highlands", 45.9, 47.5, "Captain Nials")}: ${TURN} <em>Plea To The Alliance</em>; flight path ${WAY("Arathi Highlands", 45.8, 46.1, "Refuge Pointe flight path")}. Southshore inn, Brewmeister Bilger ${WAY("Hillsbrad Foothills", 52.2, 58.6, "Brewmeister Bilger, Southshore inn")}: ${TURN} <em>MacKreel's Moonshine</em>; flight path ${WAY("Hillsbrad Foothills", 49.3, 52.3, "Southshore flight path")}. Hearth to Menethil for the last turn-ins (Sida, Halloran, Stoutfist) and fly Menethil → Ironforge. Still short? Lieutenant Farren Orinelle's Southshore chain (10,060 over six quests; murlocs at ${WAY("Hillsbrad Foothills", 44.0, 67.6, "Farren's murlocs 1")} and ${WAY("Hillsbrad Foothills", 42.3, 68.3, "Farren's murlocs 2")}, naga at ${WAY("Hillsbrad Foothills", 57.1, 67.4, "Farren's naga")}; the last 3,200 pays in Stormwind Keep).`,
           quests: [
             q(634, "Plea To The Alliance", 1250, 31, 28, "Arathi Highlands", [], { after: [633], note: "Captain Nials, Refuge Pointe." }),
             q(647, "MacKreel's Moonshine", 3050, 30, 28, "Hillsbrad", [], { note: "15-minute timer: take it last." }),
@@ -441,7 +452,7 @@
       steps: [
         {
           n: "1", title: "Calor.",
-          text: `<em>Worgen in the Woods</em> 1–4 (1,150 + 1,750 + 1,900 + 3,150; Shadow Weavers 60.8,29.7, Dark Runners 64.7,49.7, Vile Fangs and Tainted Ones in the Rotting Orchard 73,75, then Jonathan Carevin).`,
+          text: `${ACC} <em>Worgen in the Woods</em> (steps 1–4: 1,150 + 1,750 + 1,900 + 3,150). Calor takes each of the first three steps and gives the next: Shadow Weavers ${WAY("Duskwood", 60.8, 29.7, "Shadow Weavers")}, Dark Runners ${WAY("Duskwood", 64.7, 49.7, "Dark Runners")}, then the Vile Fangs and Tainted Ones in the Rotting Orchard ${WAY("Duskwood", 73, 75, "Rotting Orchard")}. The fourth step is a talk with Jonathan Carevin: ${TURN} it to him.`,
           quests: [
             q(173, "Worgen in the Woods (1)", 1150, 28, 23, DW, [], { note: "Shadow Weavers (60.8,29.7)." }),
             q(221, "Worgen in the Woods (2)", 1750, 29, 23, DW, [], { after: [173], note: "Dark Runners (64.7,49.7)." }),
@@ -451,7 +462,7 @@
         },
         {
           n: "2", title: "Abercrombie.",
-          text: `<em>Juice Delivery</em> → <em>Ghoulish Effigy</em> (1,650; 7 Ghoul Ribs) → <em>Ogre Thieves</em> (1,200; the crate by the Vul'Gol cave, 33.5,76.3) → <em>Note to the Mayor</em> (610) → Ello → Sirra → Ello (245 + 1,850 + 245).`,
+          text: `${TURN} <em>Juice Delivery</em>, then ${ACC} <em>Ghoulish Effigy</em> (1,650; 7 Ghoul Ribs). Abercrombie: ${TURN} <em>Ghoulish Effigy</em>, then ${ACC} <em>Ogre Thieves</em> (1,200; the crate by the Vul'Gol cave, ${WAY("Duskwood", 33.5, 76.3, "Ogre Thieves crate, Vul'Gol cave")}). Abercrombie: ${TURN} <em>Ogre Thieves</em>, then ${ACC} <em>Note to the Mayor</em> (610). Darkshire, Ello Ebonlocke: ${TURN} <em>Note to the Mayor</em>, then ${ACC} <em>Translate Abercrombie's Note</em>. Sirra: ${TURN} <em>Translate Abercrombie's Note</em>, then ${ACC} <em>Wait for Sirra to Finish</em>, wait a moment and ${TURN} it, then ${ACC} <em>Translation to Ello</em>. Ello: ${TURN} <em>Translation to Ello</em> (245 + 1,850 + 245).`,
           quests: [
             q(159, "Juice Delivery", 970, 24, 20, DW, [], { after: [156], note: "Taken in block C." }),
             q(133, "Ghoulish Effigy", 1650, 27, 20, DW, [], { after: [159], note: "7 Ghoul Ribs." }),
@@ -464,14 +475,14 @@
         },
         {
           n: "3", title: "The Night Watch, final step.",
-          text: `<em>The Night Watch</em> 3 (2,450; 20 Plague Spreaders in the eastern Raven Hill mausoleum, 23.6,35.0) if not banked.`,
+          text: `If <em>The Night Watch</em> 3 is not banked, Althea: ${ACC} it (2,450; 20 Plague Spreaders in the eastern Raven Hill mausoleum, ${WAY("Duskwood", 23.6, 35.0, "Eastern Raven Hill mausoleum")}); back at Althea, ${TURN} it.`,
           quests: [
             q(58, "The Night Watch (3)", 2450, 30, 18, DW, [], { after: [56, 57], ledger: "dw-watch", note: "20 Plague Spreaders (23.6,35.0)." }),
           ],
         },
         {
           n: "4", title: "Extras.",
-          text: `<em>Look to the Stars</em> 4 (2,450; Zzarc' Vul, level 33, deep in the southern ogre mound, 36.8,83.8). Group extras: <em>Bride of the Embalmer</em> (3,650; Eliza at 28.8,30.9, a level-31 elite with three guards) and, at 30 with the Wetlands ingots done, <em>Morbent Fel</em> (3,850).`,
+          text: `Viktori: ${ACC} <em>Look to the Stars</em> 4 (2,450; Zzarc' Vul, level 33, deep in the southern ogre mound, ${WAY("Duskwood", 36.8, 83.8, "Southern ogre mound")}); back at Viktori, ${TURN} it. Group extras: Ello: ${ACC} <em>Bride of the Embalmer</em> (3,650; Eliza at ${WAY("Duskwood", 28.8, 30.9, "Eliza")}, a level-31 elite with three guards), offered after the translation, and ${TURN} it to him. At 30 with the Wetlands ingots done, Sven Yorgen: ${ACC} <em>Morbent Fel</em> (3,850) and ${TURN} it to him.`,
           quests: [
             q(181, "Look to the Stars (Zzarc' Vul)", 2450, 30, 20, DW, ["extra"], { after: [177], note: "Zzarc' Vul, level 33 (36.8,83.8)." }),
             q(253, "Bride of the Embalmer", 3650, 30, 20, DW, ["extra", "group"], { note: "Eliza, a level-31 elite with three guards." }),
@@ -492,7 +503,7 @@
       steps: [
         {
           n: "1", title: "Shrine of Aessina and Xavian.",
-          text: `<em>Vile Satyr! Dryads in Danger!</em> → <em>The Branch of Cenarius</em> (5,100; Anilia in Xavian at 78.3,44.8, Geltharis at 78.0,42.4); <em>The Howling Vale</em> (2,450; the Tome of Mel'Thandris, about 50.4,39).`,
+          text: `Illiyana: ${ACC} <em>Vile Satyr! Dryads in Danger!</em>. Sentinel Melyria: ${ACC} <em>The Howling Vale</em> (2,450; the Tome of Mel'Thandris, about ${WAY("Ashenvale", 50.4, 39, "Tome of Mel'Thandris")}). In Xavian, Anilia at ${WAY("Ashenvale", 78.3, 44.8, "Anilia")}: ${TURN} <em>Vile Satyr! Dryads in Danger!</em>, then ${ACC} <em>The Branch of Cenarius</em> (5,100 for the pair; Geltharis at ${WAY("Ashenvale", 78.0, 42.4, "Geltharis")}). Back at the shrine at the end of the loop: ${TURN} <em>The Branch of Cenarius</em> to Illiyana and ${TURN} <em>The Howling Vale</em> to Melyria.`,
           quests: [
             q(1021, "Vile Satyr! Dryads in Danger!", 2550, 32, 26, AV, [], { note: "Anilia in Xavian (78.3,44.8)." }),
             q(1031, "The Branch of Cenarius", 2550, 32, 26, AV, [], { after: [1021], note: "Geltharis (78.0,42.4)." }),
@@ -501,21 +512,21 @@
         },
         {
           n: "2", title: "The rod chain of Raene's Cleansing.",
-          text: `13,860 over eight steps: Wooden Key and Iron Shaft near the Felwood road, Iron Pommel from the slimes near the Dor'danil Barrow Den at about 76,76, the hidden shrine, Krolg south-east of Mystral Lake, 4 Bloodtooth Guards and Ran Bloodtooth's Skull.`,
+          text: `13,860 over eight steps of <em>Raene's Cleansing</em>; the first is in the log from block A. The Wooden Key and Iron Shaft near the Felwood road; Shael'dryn at the moonwell: ${TURN} that step, then ${ACC} the next. The Iron Pommel from the slimes near the Dor'danil Barrow Den at about ${WAY("Ashenvale", 76, 76, "Slimes, Dor'danil Barrow Den")}; Shael'dryn: ${TURN} it, then ${ACC} the shrine step. The hidden shrine: ${TURN} the shrine step, then ${ACC} the next; Shael'dryn: ${TURN} it, then ${ACC} the step that takes the rod to Raene. Raene: ${TURN} it, then ${ACC} the Krolg step. Krolg south-east of Mystral Lake: ${TURN} it, then ${ACC} the next: 4 Bloodtooth Guards and Ran Bloodtooth's Skull. Krolg: ${TURN} it, then ${ACC} the last step. Raene: ${TURN} it.`,
           quests: [
             q(1026, "Raene's Cleansing (rod 1)", 2200, 27, 18, AV, [], { after: [1024], note: "Taken at the moonwell in block A." }),
             q(1027, "Raene's Cleansing (rod 2)", 2300, 28, 18, AV, [], { after: [1026] }),
             q(1028, "Raene's Cleansing (rod 3)", 1700, 28, 18, AV, [], { after: [1027] }),
-            q(1029, "Raene's Cleansing (rod 4)", 230, 28, 18, AV, [], { after: [1028] }),
-            q(1030, "Raene's Cleansing (rod 5)", 1700, 28, 18, AV, [], { after: [1029] }),
-            q(1055, "Raene's Cleansing (rod 6)", 230, 28, 18, AV, [], { after: [1030] }),
-            q(1045, "Raene's Cleansing (rod 7)", 2450, 30, 18, AV, [], { after: [1055], note: "Bloodtooth Guards and Ran Bloodtooth's Skull." }),
+            q(1055, "Raene's Cleansing (rod 4)", 230, 28, 18, AV, [], { after: [1028] }),
+            q(1029, "Raene's Cleansing (rod 5)", 230, 28, 18, AV, [], { after: [1055] }),
+            q(1030, "Raene's Cleansing (rod 6)", 1700, 28, 18, AV, [], { after: [1029] }),
+            q(1045, "Raene's Cleansing (rod 7)", 2450, 30, 18, AV, [], { after: [1030], note: "Bloodtooth Guards and Ran Bloodtooth's Skull." }),
             q(1046, "Raene's Cleansing (rod 8)", 3050, 30, 18, AV, [], { after: [1045], note: "Glacial Stone or Gutterblade plus a ring." }),
           ],
         },
         {
           n: "3", title: "Forest Song and the Barrow Den.",
-          text: `Kayneth at Forest Song (85.2,44.7), <em>Forsaken Diseases</em> (2,350; the Forsaken camp at 75.3,72.0) and <em>Insane Druids</em> (3,200; the Barrow Den at about 75.7,75.3).`,
+          text: `Kayneth Stillwind at Forest Song ${WAY("Ashenvale", 85.2, 44.7, "Kayneth Stillwind, Forest Song")}: ${TURN} <em>Kayneth Stillwind</em> (Shindrell's note from Astranaar), then ${ACC} <em>Forsaken Diseases</em> (2,350; the Forsaken camp at ${WAY("Ashenvale", 75.3, 72.0, "Forsaken camp, the bottle")}) and ${ACC} <em>Insane Druids</em> (3,200; the Barrow Den at about ${WAY("Ashenvale", 75.7, 75.3, "Dor'danil Barrow Den")}). Back at Kayneth: ${TURN} <em>Forsaken Diseases</em> and ${TURN} <em>Insane Druids</em>.`,
           quests: [
             q(4581, "Kayneth Stillwind", 590, 29, 24, AV, [], { note: "From Shindrell in Astranaar." }),
             q(1011, "Forsaken Diseases", 2350, 29, 24, AV, [], { after: [4581], note: "The Forsaken camp (75.3,72.0)." }),
@@ -524,7 +535,7 @@
         },
         {
           n: "4", title: "Fallen Sky Lake.",
-          text: `<em>Fallen Sky Lake</em> (3,050; the Shadethicket Oracle at 66.7,82.2).`,
+          text: `<em>Fallen Sky Lake</em> (3,050, in the log from block A): the Shadethicket Oracle at ${WAY("Ashenvale", 66.7, 82.2, "Shadethicket Oracle")}; then Pelturas in Astranaar: ${TURN} <em>Fallen Sky Lake</em>.`,
           quests: [
             q(1035, "Fallen Sky Lake", 3050, 30, 20, AV, [], { after: [1034], note: "Taken from Pelturas in block A." }),
           ],
@@ -583,13 +594,13 @@
     routeStorageKey: "friend-warrior-route-v1",
     // Classic XP needed from the start of level 20 to reach levels 20, 21, …, 30.
     levels: [0, 23200, 48400, 75700, 105100, 136800, 170800, 207200, 246100, 287500, 331800],
-    checkpoint: 28.5,
+    checkpoint: 28.7,
     mainBlocks: ["A", "B", "C"],
     reserveBlocks: ["R1", "R2", "R3"],
     gnomeregan: "G",
     // Ledger prep tasks that mean a route quest was turned in before the cap.
     ledgerTasks: { "prep-valor": [96139], "prep-watch": [56, 57] },
-    checkpointText: `Fly to Ironforge after block C. <strong>At 28.5 or higher with a Gnomeregan group forming, go to Gnomeregan</strong> (its quests are worth more than level 29→30); below 28.5, do R1 (it ends with a flight to Ironforge), then R2 if still short. If no group clears Gnomeregan, do R1, R2 and R3 in that order.`,
+    checkpointText: `Fly to Ironforge after block C. <strong>At 28.7 or higher with a Gnomeregan group forming, go to Gnomeregan</strong> (its quests and kills, about 57,000 XP, finish level 30 from there); below 28.7, do R1 (it ends with a flight to Ironforge), then R2 if still short. If no group clears Gnomeregan, do R1, R2 and R3 in that order.`,
     blocks,
     ledger,
   };
